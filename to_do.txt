@@ -1,0 +1,16 @@
+Obs:
+	1- Todos os comandos tem que ser executados com caminho absoluto
+	e relativo!!!!
+	ex : realtivo => echo "ola";
+		absoluto => /usr/bin/echo "ola";
+
+1- Criar comandos builtins
+
+	echo com opção -n
+	cd
+	pwd
+	export
+	unset
+	env
+	exit
+
