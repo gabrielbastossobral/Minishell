@@ -1,4 +1,4 @@
 #!/bin/bash
 
-git sumbodule update --init --recursive
+git submodule update --init --recursive
 git pull
