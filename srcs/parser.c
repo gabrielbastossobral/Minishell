@@ -86,7 +86,7 @@ static void	type_token(t_token **head)
 			token->type = REDIRECT;
 		else if (!ft_strncmp(token->cmd, "<<", ft_strlen("<<")))
 			token->type = HEREDOC;
-		else if (is_buildin(token->cmd))
+		else if (is_builtin(token->cmd))
 			token->type = BUILDIN;
 		else if (!token->prev || token->prev->type == PIPE)
 			token->type = EXECVE;
@@ -98,4 +98,31 @@ static void	type_token(t_token **head)
 	}
 }
 
-int	parser
+int	parser(t_token **head, char *str)
+{
+	char	**cmdlist;
+	char	**cmd;
+	int		i;
+	int		j;
+
+	cmdlist = lexer(str);
+	if (!cmdlist)
+	{
+		ft_putstr_fd("-minishell: parser: unclosed quotes\n", 2);
+		cmdlist = free_mat(cmdlist);
+		return (1);
+	}
+	i = -1;
+	while (cmdlist[++i])
+	{
+		j = -1;
+		cmd = split_line_arg(cmdlist[i]);
+		while (cmd[++j])
+			insert_token(head, cmd[j]);
+		cmd = free_mat(cmd);
+	}
+	check_pipe (cmdlist[--i], head);
+	cmdlist = free_mat(cmdlist);
+	type_token(head);
+	return (0);
+}

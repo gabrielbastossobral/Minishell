@@ -23,3 +23,30 @@ static char	*filler(char *input, int pos)
 	input = free_ptr(input);
 	return (new);
 }
+
+char	**lexer(char *input)
+{
+	int		i;
+	int		quotes;
+	char	*temp;
+	char	**ret;
+
+	i = -1;
+	quotes = 0;
+	temp = ft_strdup(input);
+	while (temp && temp[++i])
+	{
+		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<' ) && !quotes)
+		{
+			temp = filler(temp, i);
+			i = i + 2;
+		}
+		else if (temp[i] == '\"' || temp[i] == '\'')
+			quotes = check_quotes(temp[i], quotes);
+	}
+	if (quotes)
+		temp = free_ptr(temp);
+	ret = ft_split(temp, ' ');
+	temp = free_ptr(temp);
+	return (ret);
+}

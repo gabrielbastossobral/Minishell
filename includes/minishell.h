@@ -42,4 +42,9 @@ enum e_type
 
 void	handle_erros(char *msg, int stage);
 
+// UTILS
+char	**lexer(char *input);
+int		check_quotes(char c, int quotes);
+void	check_pipe(char *line, t_token **head);
+
 #endif
