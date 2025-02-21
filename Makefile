@@ -3,7 +3,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LIBFT_FLAGS = -L$(LIB_PATH) -lft
+LIBFT_FLAGS = -L$(LIB_PATH) -lft -lreadline
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 
 #===============================PATH===========================================#

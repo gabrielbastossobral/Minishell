@@ -1,13 +1,19 @@
 #include "../includes/minishell.h"
 
-int print_hello_world()
+int main(int argc, char **argv, char **envp)
 {
-    ft_printf("bola!\n");
-    return 0;
-}
+    (void)argv;
+    (void)envp;
+    
+    char *line;
 
-int main()
-{
-    print_hello_world();
+    if (argc != 1)
+        handle_erros("Usage: ./minishell", 0);
+    while (1)
+    {
+        line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $"RESET);
+        if (!line)
+            break;
+    }
     return 0;
 }
