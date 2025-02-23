@@ -20,7 +20,7 @@ static char	*filler(char *input, int pos)
 	while (input[i])
 		new[j++] = input[i++];
 	new[j] = '\0';
-	input = free_ptr(input);
+	handle_erros(NULL, 0 , input);
 	return (new);
 }
 
@@ -45,8 +45,8 @@ char	**lexer(char *input)
 			quotes = check_quotes(temp[i], quotes);
 	}
 	if (quotes)
-		temp = free_ptr(temp);
+		handle_erros(NULL, 0, temp);
 	ret = ft_split(temp, ' ');
-	temp = free_ptr(temp);
+	handle_erros(NULL, 0, temp);
 	return (ret);
 }

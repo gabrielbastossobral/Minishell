@@ -10,10 +10,10 @@ void	check_pipe(char *line, t_token **head)
 		input = readline("> ");
 		if (input && !input[0])
 		{
-			input = free_ptr(input);
+			handle_erros(NULL, 0, input);
 			return ;
 		}
 		parser(head, input);
-		input = free_ptr(input);
+		handle_erros(NULL, 0, input);
 	}
 }

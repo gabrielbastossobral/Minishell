@@ -40,7 +40,7 @@ enum e_type
 
 // HANDLE ERROS
 
-void	handle_erros(char *msg, int stage);
+void	handle_erros(char *msg, int stage, void *ptr);
 
 // UTILS
 char	**lexer(char *input);

@@ -1,4 +1,4 @@
-#include "mini_shell.h"
+#include "minishell.h"
 
 static void	insert_token(t_token **tokens, char *value)
 {
@@ -109,7 +109,7 @@ int	parser(t_token **head, char *str)
 	if (!cmdlist)
 	{
 		ft_putstr_fd("-minishell: parser: unclosed quotes\n", 2);
-		cmdlist = free_mat(cmdlist);
+		handle_erros(NULL, 1, cmdlist);
 		return (1);
 	}
 	i = -1;
@@ -119,10 +119,10 @@ int	parser(t_token **head, char *str)
 		cmd = split_line_arg(cmdlist[i]);
 		while (cmd[++j])
 			insert_token(head, cmd[j]);
-		cmd = free_mat(cmd);
+		handle_erros(NULL, 1, cmd);
 	}
 	check_pipe (cmdlist[--i], head);
-	cmdlist = free_mat(cmdlist);
+	handle_erros(NULL, 1, cmdlist);
 	type_token(head);
 	return (0);
 }
