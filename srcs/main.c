@@ -6,15 +6,15 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:10:02 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:23:40 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void free_matrix(char **matrix)
+void	free_matrix(char **matrix)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (matrix[++i])
@@ -22,15 +22,15 @@ void free_matrix(char **matrix)
 	free(matrix);
 }
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
-	return (c >= 9 && c <= 13) || c == 32;
+	return ((c >= 9 && c <= 13) || c == 32);
 }
 
-char **get_envp(char **envp)
+char	**get_envp(char **envp)
 {
-	int i;
-	char **new;
+	int		i;
+	char	**new;
 
 	i = 0;
 	while (envp[i])
@@ -51,37 +51,37 @@ char **get_envp(char **envp)
 	return (new);
 }
 
-void save_env_var(char *line, int *count, t_data *data, int env)
+void	save_env_var(char *line, int *count, t_data *data, int env)
 {
-	int equal;
-	int end;
-	int i;
+	int	equal;
+	int	end;
+	int	i;
 
 	if (line[0] == '"' || line[0] == '\'')
 		return ;
 	i = get_end_var(line, env, &end, &equal);
 	if (i == -1)
 		return ;
-	while(ft_isspace(line[i]))
+	while (ft_isspace(line[i]))
 		(*count) += end;
 	if (line[i] != 0 && line[i] != ';')
 		return ;
 	if (equal)
-		create_new_var(data, line, end, equal)
+		create_new_var(data, line, end, equal);
 }
 
 void	init_vars(t_data *data, char **envp)
 {
-	int count;
-	int index;
+	int	count;
+	int	index;
 
-	count = 0;	
+	count = 0;
 	index = -1;
 	while (envp[++index])
 		save_env_var(envp[index], &count, data, 1);
 }
 
-static void init(t_data *data, char **envp)
+static void	init(t_data *data, char **envp)
 {
 	data->vars = 0;
 	data->envp = get_envp(envp);
