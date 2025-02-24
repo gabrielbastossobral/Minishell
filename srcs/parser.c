@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:44:04 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:04:54 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	**split_line_arg(char *line)
 	i = 0;
 	quotes = 0;
 	j = 0;
-	split = ft_calloc(1, sizeof(char *));
+	split = ft_calloc(2, sizeof(char *));
 	while (line[i])
 	{
 		if (line[i] == '\"' || line[i] == '\'')
@@ -76,7 +76,7 @@ static char	**split_line_arg(char *line)
 			line += i + 1;
 			i = 0;
 			j++;
-			split = ft_realloc(split, (j + 1) * sizeof(char *));
+			split = ft_realloc(split, (j + 2) * sizeof(char *));
 		}
 		i++;
 	}
