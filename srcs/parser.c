@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:10:17 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:39:57 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,21 @@ static void	insert_token(t_token **tokens, char *value)
 	last->next = new;
 }
 
-static int	is_builtin(char *cmd)
+static int	is_builtin(char *value)
 {
-	if (!ft_strncmp(cmd, "echo", 5))
+	if (!ft_strncmp(value, "echo", 5))
 		return (1);
-	if (!ft_strncmp(cmd, "cd", 3))
+	if (!ft_strncmp(value, "cd", 3))
 		return (1);
-	if (!ft_strncmp(cmd, "pwd", 4))
+	if (!ft_strncmp(value, "pwd", 4))
 		return (1);
-	if (!ft_strncmp(cmd, "export", 7))
+	if (!ft_strncmp(value, "export", 7))
 		return (1);
-	if (!ft_strncmp(cmd, "unset", 6))
+	if (!ft_strncmp(value, "unset", 6))
 		return (1);
-	if (!ft_strncmp(cmd, "env", 4))
+	if (!ft_strncmp(value, "env", 4))
 		return (1);
-	if (!ft_strncmp(cmd, "exit", 5))
+	if (!ft_strncmp(value, "exit", 5))
 		return (1);
 	return (0);
 }
@@ -91,14 +91,14 @@ static void	type_token(t_token **head)
 	token = *head;
 	while (token)
 	{
-		if (!ft_strncmp(token->cmd, "|", ft_strlen(token->cmd)))
+		if (!ft_strncmp(token->value, "|", ft_strlen(token->value)))
 			token->type = PIPE;
-		else if (!ft_strncmp(token->cmd, ">>", ft_strlen(token->cmd)) || \
-		!ft_strncmp(token->cmd, "<", ft_strlen(token->cmd)))
+		else if (!ft_strncmp(token->value, ">>", ft_strlen(token->value)) || \
+		!ft_strncmp(token->value, "<", ft_strlen(token->value)))
 			token->type = REDIRECT;
-		else if (!ft_strncmp(token->cmd, "<<", ft_strlen("<<")))
+		else if (!ft_strncmp(token->value, "<<", ft_strlen("<<")))
 			token->type = HEREDOC;
-		else if (is_builtin(token->cmd))
+		else if (is_builtin(token->value))
 			token->type = BUILDIN;
 		else if (!token->prev || token->prev->type == PIPE)
 			token->type = EXECVE;
