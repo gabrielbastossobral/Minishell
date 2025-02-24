@@ -43,6 +43,11 @@ MU_TEST(check_quotes_complex_cases)
 
 MU_TEST(insert_token_basic_test)
 {
+
+	printf("---------------------------------\n");
+	printf("TESTE: TOKEN BASIC\n");
+	printf("---------------------------------\n");
+
     t_token *head = NULL;
 
     insert_token(&head, "echo");
@@ -57,6 +62,11 @@ MU_TEST(insert_token_basic_test)
 
 MU_TEST(insert_token_multiple_test)
 {
+
+	printf("---------------------------------\n");
+	printf("TESTE: TOKEN MULTIPLE TEST\n");
+	printf("---------------------------------\n");
+
     t_token *head = NULL;
 
     insert_token(&head, "echo");
@@ -80,6 +90,11 @@ MU_TEST(insert_token_multiple_test)
 
 MU_TEST(insert_token_existing_list_test)
 {
+
+	printf("---------------------------------\n");
+	printf("TESTE: TOKEN EXISTING_LIST TEST\n");
+	printf("---------------------------------\n");
+
     t_token *head = NULL;
 
     insert_token(&head, "echo");
@@ -103,6 +118,124 @@ MU_TEST(insert_token_existing_list_test)
     }
 }
 
+MU_TEST(test_realloc_basic)
+{
+
+	printf("---------------------------------\n");
+	printf("TESTE: REALLOC BASIC\n");
+	printf("---------------------------------\n");
+
+    char **split = NULL;
+
+    // Alocação inicial
+    split = ft_realloc(split, 2 * sizeof(char *));
+    mu_assert(split != NULL, "Split should not be NULL after initial realloc");
+
+    split[0] = ft_strdup("echo");
+    split[1] = ft_strdup("hello");
+
+    // Expansão
+    split = ft_realloc(split, 3 * sizeof(char *));
+    mu_assert(split != NULL, "Split should not be NULL after expansion");
+
+    split[2] = ft_strdup("world");
+
+    // Verificações
+    mu_assert_string_eq(split[0], "echo");
+    mu_assert_string_eq(split[1], "hello");
+    mu_assert_string_eq(split[2], "world");
+
+    // Cleanup
+    for (int i = 0; i < 3; i++)
+        free(split[i]);
+    free(split);
+}
+
+MU_TEST(test_realloc_shrink)
+{
+
+	printf("---------------------------------\n");
+	printf("TESTE: REALLOC SHRINK\n");
+	printf("---------------------------------\n");
+
+    char **split = NULL;
+
+    // Aloca 4 posições
+    split = ft_realloc(split, 4 * sizeof(char *));
+    split[0] = ft_strdup("one");
+    split[1] = ft_strdup("two");
+    split[2] = ft_strdup("three");
+    split[3] = ft_strdup("four");
+
+    // Reduz o tamanho para 2 posições
+    split = ft_realloc(split, 2 * sizeof(char *));
+    mu_assert(split != NULL, "Split should not be NULL after shrinking");
+
+    mu_assert_string_eq(split[0], "one");
+    mu_assert_string_eq(split[1], "two");
+
+    // Cleanup
+    for (int i = 0; i < 2; i++)
+        free(split[i]);
+    free(split);
+}
+
+MU_TEST(test_realloc_null_pointer)
+{
+
+	printf("---------------------------------\n");
+	printf("TESTE: REALLOC NULL POINTER\n");
+	printf("---------------------------------\n");
+	
+    char *ptr = NULL;
+
+    // Realoca ponteiro nulo (deve funcionar como malloc)
+    ptr = ft_realloc(ptr, 10 * sizeof(char));
+    mu_assert(ptr != NULL, "Realloc with NULL should behave like malloc");
+
+    strcpy(ptr, "test");
+    mu_assert_string_eq(ptr, "test");
+
+    free(ptr);
+}
+
+MU_TEST(test_realloc_to_zero)
+{
+
+	printf("---------------------------------\n");
+	printf("TESTE: REALLOC TO ZERO\n");
+	printf("---------------------------------\n");
+
+    char *ptr = malloc(10 * sizeof(char));
+    strcpy(ptr, "data");
+
+    // Realloc com tamanho zero (deve liberar e retornar NULL)
+    ptr = ft_realloc(ptr, 0);
+    mu_assert(ptr == NULL, "Realloc to 0 should return NULL");
+}
+
+MU_TEST(test_realloc_large)
+{
+
+	printf("---------------------------------\n");
+	printf("TESTE: REALLOC LARGE\n");
+	printf("---------------------------------\n");
+
+    int *arr = NULL;
+
+    // Aloca grande quantidade de memória
+    arr = ft_realloc(arr, 1000 * sizeof(int));
+    mu_assert(arr != NULL, "Large realloc should not return NULL");
+
+    for (int i = 0; i < 1000; i++)
+        arr[i] = i;
+
+    for (int i = 0; i < 1000; i++)
+        mu_assert_int_eq(arr[i], i);
+
+    free(arr);
+}
+
 
 MU_TEST_SUITE(test_suite)
 {
@@ -112,6 +245,11 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(insert_token_basic_test);
     MU_RUN_TEST(insert_token_multiple_test);
     MU_RUN_TEST(insert_token_existing_list_test);
+	MU_RUN_TEST(test_realloc_basic);
+	MU_RUN_TEST(test_realloc_shrink);
+	MU_RUN_TEST(test_realloc_null_pointer);
+	MU_RUN_TEST(test_realloc_to_zero);
+	MU_RUN_TEST(test_realloc_large);
 }
 
 int main(void)
