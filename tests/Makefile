@@ -15,7 +15,7 @@ TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
 
-SRCS = $(SRC_PATH)/utils.c
+SRCS = $(SRC_PATH)/utils.c $(SRC_PATH)/parser.c
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)

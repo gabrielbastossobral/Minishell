@@ -6,11 +6,11 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 11:04:54 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:54:34 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 static void	insert_token(t_token **tokens, char *value)
 {
