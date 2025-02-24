@@ -15,7 +15,7 @@ TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
 
-SRCS = $(SRC_PATH)/utils.c
+SRCS = $(SRC_PATH)/*.c
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
@@ -30,7 +30,7 @@ $(NAME): $(OBJS) $(TEST_OBJS)
 
 clean:
 	@echo "Cleaning objects..."
-	@rm -f $(OBJS) $(TEST_OBJS)
+	@rm -f $(OBJS) $(TEST_OBJS) $(LIB_PATH)/*.o
 
 fclean: clean
 	@echo "Cleaning executables..."
