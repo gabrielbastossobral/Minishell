@@ -3,14 +3,14 @@
 NAME = test
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-#LIBFT_FLAGS = -L$(LIB_PATH) -lft
+LIBFT_FLAGS = -L$(LIB_PATH) -lft
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 
 #================================PATH==========================================#
 
 SRC_PATH = ../srcs
 HEADER = ../includes
-#LIB_PATH = ../libs/libft
+LIB_PATH = ../libs/libft
 TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
@@ -25,7 +25,8 @@ TEST_OBJS = $(TEST_SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(TEST_OBJS)
-	@$(CC) $(CFLAGS) $(TEST_OBJS) $(OBJS) -I$(HEADER) -o $(NAME)
+	$(MAKE_NO_PRINT) -C $(LIB_PATH)
+	@$(CC) $(CFLAGS) $(TEST_OBJS) $(OBJS) -I$(HEADER) $(LIBFT_FLAGS) -o $(NAME)
 
 clean:
 	@echo "Cleaning objects..."
