@@ -86,7 +86,9 @@ int		check_quotes(char c, int quotes);
 void	check_pipe(char *line, t_token **head);
 void	*ft_realloc(void *ptr, size_t size);
 
+
 // PARSER
 int		parser(t_token **head, char *str);
+void	insert_token(t_token **head, char *value);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 11:54:34 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 12:19:56 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	insert_token(t_token **tokens, char *value)
+void	insert_token(t_token **tokens, char *value)
 {
 	t_token	*new;
 	t_token	*last;
