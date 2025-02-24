@@ -83,5 +83,6 @@ void	handle_erros(char *msg, int stage, void *ptr);
 char	**lexer(char *input);
 int		check_quotes(char c, int quotes);
 void	check_pipe(char *line, t_token **head);
+void	*ft_realloc(void *ptr, size_t size);
 
 #endif
