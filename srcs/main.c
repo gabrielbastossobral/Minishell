@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
+/*   Updated: 2025/02/24 10:10:02 by gabastos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 void free_matrix(char **matrix)
@@ -58,7 +70,7 @@ void save_env_var(char *line, int *count, t_data *data, int env)
 		create_new_var(data, line, end, equal)
 }
 
-void init_vars(t_data *data, char **envp)
+void	init_vars(t_data *data, char **envp)
 {
 	int count;
 	int index;

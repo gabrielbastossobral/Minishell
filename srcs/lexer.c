@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
+/*   Updated: 2025/02/24 10:09:38 by gabastos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*filler(char *input, int pos)
@@ -20,7 +32,7 @@ static char	*filler(char *input, int pos)
 	while (input[i])
 		new[j++] = input[i++];
 	new[j] = '\0';
-	handle_erros(NULL, 0 , input);
+	handle_erros(NULL, 0, input);
 	return (new);
 }
 
