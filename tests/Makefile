@@ -3,19 +3,19 @@
 NAME = test
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-#LIBFT_FLAGS = -L$(LIB_PATH) -lft
+LIBFT_FLAGS = -L$(LIB_PATH) -lft
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 
 #================================PATH==========================================#
 
 SRC_PATH = ../srcs
 HEADER = ../includes
-#LIB_PATH = ../libs/libft
+LIB_PATH = ../libs/libft
 TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
 
-SRCS = $(SRC_PATH)/utils.c $(SRC_PATH)/parser.c
+SRCS = $(SRC_PATH)/*.c
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
@@ -25,11 +25,12 @@ TEST_OBJS = $(TEST_SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(TEST_OBJS)
-	@$(CC) $(CFLAGS) $(TEST_OBJS) $(OBJS) -I$(HEADER) -o $(NAME)
+	$(MAKE_NO_PRINT) -C $(LIB_PATH)
+	@$(CC) $(CFLAGS) $(TEST_OBJS) $(OBJS) -I$(HEADER) $(LIBFT_FLAGS) -o $(NAME)
 
 clean:
 	@echo "Cleaning objects..."
-	@rm -f $(OBJS) $(TEST_OBJS)
+	@rm -f $(OBJS) $(TEST_OBJS) $(LIB_PATH)/*.o
 
 fclean: clean
 	@echo "Cleaning executables..."

@@ -3,6 +3,7 @@
 
 # include "readline/readline.h"
 # include "../libs/libft/includes/not_in_standard_includes/ft_printf_bonus.h"
+# include "../libs/libft/includes/not_in_standard_includes/not_in_standard.h"
 # include "../libs/libft/includes/ft_stdlib.h"
 # include "../libs/libft/includes/ft_string_functions.h"
 # include <fcntl.h>
@@ -84,5 +85,8 @@ char	**lexer(char *input);
 int		check_quotes(char c, int quotes);
 void	check_pipe(char *line, t_token **head);
 void	*ft_realloc(void *ptr, size_t size);
+
+// PARSER
+int		parser(t_token **head, char *str);
 
 #endif
