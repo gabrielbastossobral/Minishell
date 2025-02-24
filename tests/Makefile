@@ -26,6 +26,9 @@ TEST_OBJS = $(TEST_SRCS:.c=.o)
 
 #===============================RULES===========================================#
 
+run: all
+	@valgrind ./$(NAME)
+
 all: $(NAME)
 
 $(NAME): $(OBJS) $(TEST_OBJS)
@@ -34,7 +37,8 @@ $(NAME): $(OBJS) $(TEST_OBJS)
 
 clean:
 	@echo "Cleaning objects..."
-	@rm -f $(OBJS) $(TEST_OBJS) $(LIB_PATH)/*.o
+	@$(MAKE_NO_PRINT) -C $(LIB_PATH) fclean
+	@rm -f $(OBJS) $(TEST_OBJS)
 
 fclean: clean
 	@echo "Cleaning executables..."
