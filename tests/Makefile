@@ -3,7 +3,7 @@
 NAME = test
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LIBFT_FLAGS = -L$(LIB_PATH) -lft
+LIBFT_FLAGS = -lreadline -L$(LIB_PATH) -lft
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 
 #================================PATH==========================================#
@@ -15,7 +15,10 @@ TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
 
-SRCS = $(SRC_PATH)/*.c
+SRCS = $(wildcard $(SRC_PATH)/utils.c \
+							parser.c \
+							parser_utils.c \
+							lexer.c \)
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
