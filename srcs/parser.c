@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:39:57 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:44:04 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	insert_token(t_token **tokens, char *value)
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
-		handle_erros("Error: malloc", 0);
+		handle_erros("Error: malloc", 0, NULL);
 	new->value = value;
 	new->type = 0;
 	new->next = NULL;
