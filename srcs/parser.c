@@ -6,13 +6,17 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/24 14:45:20 by gcosta-m         ###   ########.fr       */
+=======
+/*   Updated: 2025/02/24 12:19:56 by gabastos         ###   ########.fr       */
+>>>>>>> f0262303c996d9dc861aab914a5a3079a976dfbb
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	insert_token(t_token **tokens, char *value)
+void	insert_token(t_token **tokens, char *value)
 {
 	t_token	*new;
 	t_token	*last;

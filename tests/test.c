@@ -41,12 +41,77 @@ MU_TEST(check_quotes_complex_cases)
 	mu_assert_int_eq(check_quotes('\'', 2), 0);  // Fecha aspas simples
 }
 
+MU_TEST(insert_token_basic_test)
+{
+    t_token *head = NULL;
+
+    insert_token(&head, "echo");
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_int_eq(head->type, 0);
+    mu_assert(head->next == NULL, "Next should be NULL");
+    mu_assert(head->prev == NULL, "Prev should be NULL");
+
+    // Cleanup
+    free(head);
+}
+
+MU_TEST(insert_token_multiple_test)
+{
+    t_token *head = NULL;
+
+    insert_token(&head, "echo");
+    insert_token(&head, "cd");
+    insert_token(&head, "pwd");
+
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_string_eq(head->next->value, "cd");
+    mu_assert_string_eq(head->next->next->value, "pwd");
+    mu_assert(head->next->next->next == NULL, "Next of last token should be NULL");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
+MU_TEST(insert_token_existing_list_test)
+{
+    t_token *head = NULL;
+
+    insert_token(&head, "echo");
+    insert_token(&head, "cd");
+
+    t_token *new_head = head;
+    insert_token(&new_head, "pwd");
+
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_string_eq(head->next->value, "cd");
+    mu_assert_string_eq(head->next->next->value, "pwd");
+    mu_assert(head->next->next->next == NULL, "Next of last token should be NULL");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
 
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
 	MU_RUN_TEST(check_quotes_edge_cases);
 	MU_RUN_TEST(check_quotes_complex_cases);
+    MU_RUN_TEST(insert_token_basic_test);
+    MU_RUN_TEST(insert_token_multiple_test);
+    MU_RUN_TEST(insert_token_existing_list_test);
 }
 
 int main(void)
