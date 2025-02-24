@@ -3,6 +3,8 @@
 
 # include "readline/readline.h"
 # include "../libs/libft/includes/not_in_standard_includes/ft_printf_bonus.h"
+# include "../libs/libft/includes/ft_stdlib.h"
+# include "../libs/libft/includes/ft_string_functions.h"
 # include <fcntl.h>
 # include <readline/history.h>
 # include <signal.h>

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:10:28 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:03:25 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int	check_quotes(char c, int quotes)
 {

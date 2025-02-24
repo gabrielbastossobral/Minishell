@@ -1,23 +1,23 @@
 #================================FLAGS=========================================#
 
-NAME = minishell_tests
+NAME = test
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LIBFT_FLAGS = -L$(LIB_PATH) -lft
+#LIBFT_FLAGS = -L$(LIB_PATH) -lft
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 
 #================================PATH==========================================#
 
 SRC_PATH = ../srcs
-LIB_PATH = ../libs/libft
-INC_PATH = ../includes
+HEADER = ../includes
+#LIB_PATH = ../libs/libft
 TEST_PATH = ./tests
 
 #==============================SOURCES=========================================#
 
-SRCS = $(wildcard $(SRC_PATH)/*.c)
+SRCS = $(SRC_PATH)/utils.c
 OBJS = $(SRCS:.c=.o)
-TEST_SRCS = $(wildcard $(TEST_PATH)/*.c)
+TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
 
 #===============================RULES===========================================#
@@ -25,18 +25,15 @@ TEST_OBJS = $(TEST_SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(TEST_OBJS)
-	@$(MAKE_NO_PRINT) -C $(LIB_PATH)
-	@$(CC) $(CFLAGS) $(OBJS) $(TEST_OBJS) $(LIBFT_FLAGS) -I$(INC_PATH) -o $(NAME)
+	@$(CC) $(CFLAGS) $(TEST_OBJS) $(OBJS) -I$(HEADER) -o $(NAME)
 
 clean:
 	@echo "Cleaning objects..."
 	@rm -f $(OBJS) $(TEST_OBJS)
-	@$(MAKE_NO_PRINT) -C $(LIB_PATH) clean
 
 fclean: clean
 	@echo "Cleaning executables..."
 	@rm -f $(NAME)
-	@$(MAKE_NO_PRINT) -C $(LIB_PATH) fclean
 
 re: fclean all
 

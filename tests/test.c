@@ -1,26 +1,26 @@
 #include "minunit.h"
 #include "../includes/minishell.h"
 
-int tests_run = 0;
-
-MU_TEST(test_hello_world)
+MU_TEST(check_quotes_test)
 {
-    const char *result = print_hello_world();
-    mu_assert_string_eq(result, "Hello, World!\n");
-    tests_run++;
+	printf("--------------------\n");
+	printf("TEST: check_quotes_test\n");
+	printf("--------------------\n");
+
+    mu_assert_int_eq(check_quotes('\"', 0), 1);
+    mu_assert_int_eq(check_quotes('\"', 1), 0);
+    mu_assert_int_eq(check_quotes('\'', 0), 2);
+    mu_assert_int_eq(check_quotes('\'', 2), 0);
 }
 
 MU_TEST_SUITE(test_suite)
 {
-    MU_RUN_TEST(test_hello_world);
+    MU_RUN_TEST(check_quotes_test);
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
     MU_RUN_SUITE(test_suite);
     MU_REPORT();
-    printf("Total tests run: %d\n", tests_run);
-    printf("Tests passed: %d\n", tests_run - minunit_fail);
-    printf("Tests failed: %d\n", minunit_fail);
-    return minunit_fail;
+    return MU_EXIT_CODE;
 }

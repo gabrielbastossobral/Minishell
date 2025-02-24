@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 10:09:38 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:01:34 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 static char	*filler(char *input, int pos)
 {
