@@ -20,6 +20,41 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct sigaction	t_sig;
+
+typedef struct s_args
+{
+	char *arg;
+	struct s_args *next;
+}	t_args;
+
+typedef struct s_cmd
+{
+	char *cmd;
+	char *flags;
+	t_args *args;
+	struct s_cmd *next;
+	int fd_input;
+	int fd_output;
+}			t_cmd;
+
+typedef struct s_vars
+{
+	int is_env;
+	char *var;
+	char *value;
+	struct vars *next;
+}			t_vars;
+
+typedef struct s_data
+{
+	t_cmd *cmds;
+	t_token *tokens;
+	t_vars *vars;
+	char **envp;
+	t_sig act;
+}	t_data;
+
 // TYPE TOKENS
 enum e_type
 {
