@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 15:07:42 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:06:28 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	insert_token(t_token **tokens, char *value)
 	last->next = new;
 }
 
-static int	is_builtin(char *value)
+int	is_builtin(char *value)
 {
 	if (!ft_strncmp(value, "echo", 5))
 		return (1);

@@ -90,5 +90,6 @@ void	*ft_realloc(void *ptr, size_t size);
 // PARSER
 int		parser(t_token **head, char *str);
 void	insert_token(t_token **head, char *value);
+int		is_builtin(char *value);
 
 #endif

@@ -236,6 +236,53 @@ MU_TEST(test_realloc_large)
     free(arr);
 }
 
+MU_TEST(is_builtin_basic_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: IS BUILTIN BASIC\n");
+    printf("---------------------------------\n");
+
+    // Teste básico para comandos builtin
+    mu_assert_int_eq(is_builtin("echo"), 1);   // Comando builtin "echo"
+    mu_assert_int_eq(is_builtin("cd"), 1);     // Comando builtin "cd"
+    mu_assert_int_eq(is_builtin("pwd"), 1);    // Comando builtin "pwd"
+    mu_assert_int_eq(is_builtin("export"), 1); // Comando builtin "export"
+    mu_assert_int_eq(is_builtin("unset"), 1);  // Comando builtin "unset"
+    mu_assert_int_eq(is_builtin("env"), 1);    // Comando builtin "env"
+    mu_assert_int_eq(is_builtin("exit"), 1);   // Comando builtin "exit"
+}
+
+MU_TEST(is_builtin_non_builtin_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: IS BUILTIN NON-BUILTIN\n");
+    printf("---------------------------------\n");
+
+    // Teste para comandos que não são builtin
+    mu_assert_int_eq(is_builtin("ls"), 0);     // Comando não builtin "ls"
+    mu_assert_int_eq(is_builtin("grep"), 0);   // Comando não builtin "grep"
+    mu_assert_int_eq(is_builtin("cat"), 0);    // Comando não builtin "cat"
+    mu_assert_int_eq(is_builtin("make"), 0);   // Comando não builtin "make"
+    mu_assert_int_eq(is_builtin("gcc"), 0);    // Comando não builtin "gcc"
+    mu_assert_int_eq(is_builtin("vim"), 0);    // Comando não builtin "vim"
+    mu_assert_int_eq(is_builtin("nano"), 0);   // Comando não builtin "nano"
+}
+
+MU_TEST(is_builtin_edge_cases_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: IS BUILTIN EDGE CASES\n");
+    printf("---------------------------------\n");
+
+    // Teste para casos limite
+    mu_assert_int_eq(is_builtin(""), 0);       // String vazia
+    mu_assert_int_eq(is_builtin(" "), 0);      // String com espaço
+    mu_assert_int_eq(is_builtin("echoo"), 0);  // Comando similar mas não builtin
+    mu_assert_int_eq(is_builtin("cd "), 0);    // Comando com espaço no final
+    mu_assert_int_eq(is_builtin(" pwd"), 0);   // Comando com espaço no início
+    mu_assert_int_eq(is_builtin("eChO"), 0);   // Comando com letras maiúsculas e minúsculas
+}
+
 
 MU_TEST_SUITE(test_suite)
 {
@@ -250,6 +297,9 @@ MU_TEST_SUITE(test_suite)
 	MU_RUN_TEST(test_realloc_null_pointer);
 	MU_RUN_TEST(test_realloc_to_zero);
 	MU_RUN_TEST(test_realloc_large);
+    MU_RUN_TEST(is_builtin_basic_test);
+    MU_RUN_TEST(is_builtin_non_builtin_test);
+    MU_RUN_TEST(is_builtin_edge_cases_test);
 }
 
 int main(void)
