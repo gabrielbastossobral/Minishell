@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/25 11:06:28 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:17:35 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static char	**split_line_arg(char *line)
 	return (split);
 }
 
-static void	type_token(t_token **head)
+void	type_token(t_token **head)
 {
 	t_token	*token;
 

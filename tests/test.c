@@ -283,6 +283,118 @@ MU_TEST(is_builtin_edge_cases_test)
     mu_assert_int_eq(is_builtin("eChO"), 0);   // Comando com letras maiúsculas e minúsculas
 }
 
+MU_TEST(type_token_basic_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: TYPE TOKEN BASIC\n");
+    printf("---------------------------------\n");
+
+    // Teste básico para verificar a atribuição de tipos de token
+    t_token *head = NULL;
+
+    insert_token(&head, "echo");
+    insert_token(&head, "|");
+    insert_token(&head, "cd");
+
+    type_token(&head);
+
+    mu_assert_int_eq(head->type, BUILDIN); // "echo" deve ser BUILTIN
+    mu_assert_int_eq(head->next->type, PIPE); // "|" deve ser PIPE
+    mu_assert_int_eq(head->next->next->type, BUILDIN); // "cd" deve ser BUILTIN
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
+MU_TEST(type_token_redirect_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: TYPE TOKEN REDIRECT\n");
+    printf("---------------------------------\n");
+
+    // Teste para verificar a atribuição de tipos de token de redirecionamento
+    t_token *head = NULL;
+
+    insert_token(&head, "echo");
+    insert_token(&head, ">");
+    insert_token(&head, "file.txt");
+
+    type_token(&head);
+
+    mu_assert_int_eq(head->type, BUILDIN); // "echo" deve ser BUILTIN
+    mu_assert_int_eq(head->next->type, REDIRECT); // ">" deve ser REDIRECT
+    mu_assert_int_eq(head->next->next->type, ARG_FILE); // "file.txt" deve ser ARG_FILE
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
+MU_TEST(type_token_heredoc_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: TYPE TOKEN HEREDOC\n");
+    printf("---------------------------------\n");
+
+    // Teste para verificar a atribuição de tipos de token de HEREDOC
+    t_token *head = NULL;
+
+    insert_token(&head, "<<");
+    insert_token(&head, "EOF");
+
+    type_token(&head);
+
+    mu_assert_int_eq(head->type, HEREDOC); // "<<" deve ser HEREDOC
+    mu_assert_int_eq(head->next->type, ARG); // "EOF" deve ser ARG
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
+MU_TEST(type_token_execve_test)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: TYPE TOKEN EXECVE\n");
+    printf("---------------------------------\n");
+
+    // Teste para verificar a atribuição de tipos de token EXECVE
+    t_token *head = NULL;
+
+    insert_token(&head, "ls");
+    insert_token(&head, "-la");
+
+    type_token(&head);
+
+    mu_assert_int_eq(head->type, EXECVE); // "ls" deve ser EXECVE
+    mu_assert_int_eq(head->next->type, ARG); // "-la" deve ser ARG
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
 
 MU_TEST_SUITE(test_suite)
 {
@@ -300,6 +412,10 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(is_builtin_basic_test);
     MU_RUN_TEST(is_builtin_non_builtin_test);
     MU_RUN_TEST(is_builtin_edge_cases_test);
+    MU_RUN_TEST(type_token_basic_test);
+    MU_RUN_TEST(type_token_redirect_test);
+    MU_RUN_TEST(type_token_heredoc_test);
+    MU_RUN_TEST(type_token_execve_test);
 }
 
 int main(void)
