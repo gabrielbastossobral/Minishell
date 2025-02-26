@@ -20,7 +20,7 @@ void	insert_token(t_token **tokens, char *value)
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
 		handle_erros("Error: malloc", 0, NULL);
-	new->value = value;
+	new->value = ft_strdup(value);
 	new->type = 0;
 	new->next = NULL;
 	new->prev = NULL;
@@ -55,33 +55,16 @@ int	is_builtin(char *value)
 	return (0);
 }
 
-static char	**split_line_arg(char *line)
+char	**split_line_arg(char *line)
 {
-	int		i;
-	int		quotes;
-	int		j;
-	char	**split;
+    char	**split;
+    int		j;
 
-	i = 0;
-	quotes = 0;
-	j = 0;
-	split = ft_calloc(2, sizeof(char *));
-	while (line[i])
-	{
-		if (line[i] == '\"' || line[i] == '\'')
-			quotes = check_quotes(line[i], quotes);
-		if (line[i] == ' ' && !quotes)
-		{
-			split[j] = ft_substr(line, 0, i);
-			line += i + 1;
-			i = 0;
-			j++;
-			split = ft_realloc(split, (j + 2) * sizeof(char *));
-		}
-		i++;
-	}
-	split[j] = ft_strdup(line);
-	return (split);
+    j = 0;
+    split = ft_calloc(2, sizeof(char *));
+    split_line(line, &split, &j);
+    split[j] = NULL;
+    return (split);
 }
 
 void	type_token(t_token **head)

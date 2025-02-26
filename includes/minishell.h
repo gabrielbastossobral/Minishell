@@ -25,36 +25,9 @@ typedef struct s_token
 
 typedef struct sigaction	t_sig;
 
-typedef struct s_args
-{
-	char *arg;
-	struct s_args *next;
-}	t_args;
-
-typedef struct s_cmd
-{
-	char *cmd;
-	char *flags;
-	t_args *args;
-	struct s_cmd *next;
-	int fd_input;
-	int fd_output;
-}			t_cmd;
-
-typedef struct s_vars
-{
-	int is_env;
-	char *var;
-	char *value;
-	struct vars *next;
-}			t_vars;
-
 typedef struct s_data
 {
-	t_cmd *cmds;
 	t_token *tokens;
-	t_vars *vars;
-	char **envp;
 	t_sig act;
 }	t_data;
 
@@ -71,26 +44,32 @@ enum e_type
 };
 
 // COLORS
-
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
 // HANDLE ERROS
-
 void	handle_erros(char *msg, int stage, void *ptr);
 
 // UTILS
-char	**lexer(char *input);
 int		check_quotes(char c, int quotes);
+void	free_matrix(char **matrix);
+int		ft_isspace(char c);
+
+// LEXER
+char	**lexer(char *input);
+
+// PARSER
+void	insert_token(t_token **head, char *value);
+int		is_builtin(char *value);
+char	**split_line_arg(char *line);
+void	type_token(t_token **head);
+int		parser(t_token **head, char *str);
+
+//PARSER UTILS
+void	split_line(char *line, char ***split, int *j);
 void	check_pipe(char *line, t_token **head);
 void	*ft_realloc(void *ptr, size_t size);
 
-
-// PARSER
-int		parser(t_token **head, char *str);
-void	insert_token(t_token **head, char *value);
-int		is_builtin(char *value);
-void	type_token(t_token **head);
 
 #endif

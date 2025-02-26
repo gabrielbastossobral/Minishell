@@ -48,3 +48,35 @@ void	*ft_realloc(void *ptr, size_t size)
 	free(ptr);
 	return (new_ptr);
 }
+
+static void	add_substring(char ***split, char *line, int len, int *j)
+{
+    (*split)[*j] = ft_substr(line, 0, len);
+    (*j)++;
+    *split = ft_realloc(*split, (*j + 2) * sizeof(char *));
+}
+
+void	split_line(char *line, char ***split, int *j)
+{
+    int	i;
+    int	quotes;
+
+    i = 0;
+    quotes = 0;
+    while (line[i])
+    {
+        if (line[i] == '\"' || line[i] == '\'')
+            quotes = check_quotes(line[i], quotes);
+        if (line[i] == ' ' && !quotes)
+        {
+            if (i > 0)
+                add_substring(split, line, i, j);
+            line += i + 1;
+            i = 0;
+        }
+        else
+            i++;
+    }
+    if (*line)
+        add_substring(split, line, i, j);
+}

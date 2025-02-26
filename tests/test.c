@@ -395,6 +395,197 @@ MU_TEST(type_token_execve_test)
     }
 }
 
+MU_TEST(test_split_line_arg)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: SPLIT LINE ARG\n");
+    printf("---------------------------------\n");
+
+    // Teste básico
+    char *line1 = "echo hello world";
+    char **split1 = split_line_arg(line1);
+
+    mu_assert_string_eq(split1[0], "echo");
+    mu_assert_string_eq(split1[1], "hello");
+    mu_assert_string_eq(split1[2], "world");
+
+    // Cleanup
+    for (int i = 0; i < 3; i++)
+        free(split1[i]);
+    free(split1);
+
+    // Teste com aspas
+    char *line2 = "echo \"hello world\"";
+    char **split2 = split_line_arg(line2);
+
+    mu_assert_string_eq(split2[0], "echo");
+    mu_assert_string_eq(split2[1], "\"hello world\"");
+
+    // Cleanup
+    for (int i = 0; i < 2; i++)
+        free(split2[i]);
+    free(split2);
+
+    // Teste com caracteres especiais
+    char *line3 = "echo hello;world";
+    char **split3 = split_line_arg(line3);
+
+    mu_assert_string_eq(split3[0], "echo");
+    mu_assert_string_eq(split3[1], "hello;world");
+
+    // Cleanup
+    for (int i = 0; i < 2; i++)
+        free(split3[i]);
+    free(split3);
+
+    // Teste com espaços em branco
+    char *line4 = "   echo    hello   world   ";
+    char **split4 = split_line_arg(line4);
+
+    mu_assert_string_eq(split4[0], "echo");
+    mu_assert_string_eq(split4[1], "hello");
+    mu_assert_string_eq(split4[2], "world");
+
+    // Cleanup
+    for (int i = 0; i < 3; i++)
+        free(split4[i]);
+    free(split4);
+
+    // Teste com aspas simples
+    char *line5 = "echo 'hello world'";
+    char **split5 = split_line_arg(line5);
+
+    mu_assert_string_eq(split5[0], "echo");
+    mu_assert_string_eq(split5[1], "'hello world'");
+
+    // Cleanup
+    for (int i = 0; i < 2; i++)
+        free(split5[i]);
+    free(split5);
+
+    // Teste com espaços em branco no início e no final
+    char *line6 = "   echo   ";
+    char **split6 = split_line_arg(line6);
+
+    mu_assert_string_eq(split6[0], "echo");
+
+    // Cleanup
+    for (int i = 0; i < 1; i++)
+        free(split6[i]);
+    free(split6);
+}
+
+MU_TEST(test_parser_basic)
+{
+    t_token *head = NULL;
+    char *line = "echo hello world";
+
+    int result = parser(&head, line);
+
+    mu_assert_int_eq(result, 0);
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_int_eq(head->type, BUILDIN);
+    mu_assert_string_eq(head->next->value, "hello");
+    mu_assert_int_eq(head->next->type, ARG);
+    mu_assert_string_eq(head->next->next->value, "world");
+    mu_assert_int_eq(head->next->next->type, ARG);
+    mu_assert(head->next->next->next == NULL, "Expected NULL at the end of the token list");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_parser_redirection)
+{
+    t_token *head = NULL;
+    char *line = "echo hello > output.txt";
+
+    int result = parser(&head, line);
+
+    mu_assert_int_eq(result, 0);
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_int_eq(head->type, BUILDIN);
+    mu_assert_string_eq(head->next->value, "hello");
+    mu_assert_int_eq(head->next->type, ARG);
+    mu_assert_string_eq(head->next->next->value, ">");
+    mu_assert_int_eq(head->next->next->type, REDIRECT);
+    mu_assert_string_eq(head->next->next->next->value, "output.txt");
+    mu_assert_int_eq(head->next->next->next->type, ARG_FILE);
+    mu_assert(head->next->next->next->next == NULL, "Expected NULL at the end of the token list");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_parser_pipe)
+{
+    t_token *head = NULL;
+    char *line = "echo hello | grep world";
+
+    int result = parser(&head, line);
+
+    mu_assert_int_eq(result, 0);
+    mu_assert_string_eq(head->value, "echo");
+    mu_assert_int_eq(head->type, BUILDIN);
+    mu_assert_string_eq(head->next->value, "hello");
+    mu_assert_int_eq(head->next->type, ARG);
+    mu_assert_string_eq(head->next->next->value, "|");
+    mu_assert_int_eq(head->next->next->type, PIPE);
+    mu_assert_string_eq(head->next->next->next->value, "grep");
+    mu_assert_int_eq(head->next->next->next->type, EXECVE);
+    mu_assert_string_eq(head->next->next->next->next->value, "world");
+    mu_assert_int_eq(head->next->next->next->next->type, ARG);
+    mu_assert(head->next->next->next->next->next == NULL, "Expected NULL at the end of the token list");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_parser_builtin)
+{
+    t_token *head = NULL;
+    char *line = "cd /home/user";
+
+    int result = parser(&head, line);
+
+    mu_assert_int_eq(result, 0);
+    mu_assert_string_eq(head->value, "cd");
+    mu_assert_int_eq(head->type, BUILDIN);
+    mu_assert_string_eq(head->next->value, "/home/user");
+    mu_assert_int_eq(head->next->type, ARG);
+    mu_assert(head->next->next == NULL, "Expected NULL at the end of the token list");
+
+    // Cleanup
+    t_token *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
 
 MU_TEST_SUITE(test_suite)
 {
@@ -416,6 +607,11 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(type_token_redirect_test);
     MU_RUN_TEST(type_token_heredoc_test);
     MU_RUN_TEST(type_token_execve_test);
+    MU_RUN_TEST(test_split_line_arg);
+    MU_RUN_TEST(test_parser_basic);
+    MU_RUN_TEST(test_parser_redirection);
+    MU_RUN_TEST(test_parser_pipe);
+    MU_RUN_TEST(test_parser_builtin);
 }
 
 int main(void)

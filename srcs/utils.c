@@ -30,3 +30,18 @@ int	check_quotes(char c, int quotes)
 	}
 	return (quotes);
 }
+
+void	free_matrix(char **matrix)
+{
+	int	i;
+
+	i = -1;
+	while (matrix[++i])
+		free(matrix[i]);
+	free(matrix);
+}
+
+int	ft_isspace(char c)
+{
+	return ((c >= 9 && c <= 13) || c == 32);
+}

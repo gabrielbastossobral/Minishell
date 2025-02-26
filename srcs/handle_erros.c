@@ -14,25 +14,24 @@
 
 void	handle_erros(char *msg, int stage, void *ptr)
 {
-	int		i;
-	char	**arr;
+    int		i;
+    char	**arr;
 
-	if (ptr)
-	{
-		free(ptr);
-		{
-			if (stage == 1)
-			{
-				arr = (char **)ptr;
-				i = -1;
-				while (arr[++i])
-					free(arr[i]);
-				free(arr);
-			}
-			else
-				free(ptr);
-		}
-	}
-	if (!stage)
-		ft_printf("%s%s%s\n", RED, msg, RESET);
+    if (ptr)
+    {
+        if (stage == 1)
+        {
+            arr = (char **)ptr;
+            i = -1;
+            while (arr[++i])
+                free(arr[i]);
+            free(arr);
+        }
+        else
+        {
+            free(ptr);
+        }
+    }
+    if (msg)
+        ft_printf("%s%s%s\n", RED, msg, RESET);
 }
