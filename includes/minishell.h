@@ -23,6 +23,16 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct s_mini
+{
+	char	*input;
+	char	*prompt;
+	char	**envp;
+	t_token	*token;
+	char	error;
+	char	exit;
+}	t_mini;
+
 typedef struct sigaction	t_sig;
 
 typedef struct s_data
