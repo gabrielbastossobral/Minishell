@@ -39,6 +39,8 @@ typedef struct s_data
 {
 	t_token *tokens;
 	t_sig act;
+	int exit_error;
+	char **envp;
 }	t_data;
 
 // TYPE TOKENS
@@ -65,6 +67,7 @@ void	handle_erros(char *msg, int stage, void *ptr);
 int		check_quotes(char c, int quotes);
 void	free_matrix(char **matrix);
 int		ft_isspace(char c);
+char 	**copy_envp(char **envp);
 
 // LEXER
 char	**lexer(char *input);
