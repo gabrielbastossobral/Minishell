@@ -40,10 +40,9 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = get_input();
-		printf("line: %s\n", line);
 		if (!parser(&data.tokens, line) && !syntax_checker(&data))
 		{
-			//expand(&data);
+			expand(&data);
 			//executer(&data);
 		}
 		//clear(data);
