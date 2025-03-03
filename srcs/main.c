@@ -19,6 +19,16 @@ static void init(t_data *data, char **envp)
 	data->exit_error = 0;
 }
 
+char *get_input()
+{
+	char *line;
+
+	line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
+	if (line && *line)
+		add_history(line);
+	return line;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -29,10 +39,9 @@ int	main(int argc, char **argv, char **envp)
 	init(&data, envp);
 	while (1)
 	{
-		line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
-		if (!line)
-			break ;
-		if (!parser(&data, line) && !syntax_checker(&data))
+		line = get_input();
+		printf("line: %s\n", line);
+		if (!parser(&data.tokens, line) && !syntax_checker(&data))
 		{
 			//expand(&data);
 			//executer(&data);

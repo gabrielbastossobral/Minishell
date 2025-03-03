@@ -84,5 +84,7 @@ void	split_line(char *line, char ***split, int *j);
 void	check_pipe(char *line, t_token **head);
 void	*ft_realloc(void *ptr, size_t size);
 
+//SYNTAX CHECKER
+int		syntax_checker(t_data *data);
 
 #endif

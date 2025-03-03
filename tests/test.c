@@ -587,6 +587,102 @@ MU_TEST(test_parser_builtin)
     }
 }
 
+MU_TEST(test_syntax_checker_basic)
+{
+    t_data data;
+    t_token *head = NULL;
+    char *line = "echo hello world";
+
+    data.tokens = head;
+    int result = parser(&data.tokens, line);
+    mu_assert_int_eq(result, 0);
+
+    result = syntax_checker(&data);
+    mu_assert_int_eq(result, 0);
+
+    // Cleanup
+    t_token *tmp;
+    while (data.tokens)
+    {
+        tmp = data.tokens;
+        data.tokens = data.tokens->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_syntax_checker_pipe_error)
+{
+    t_data data;
+    t_token *head = NULL;
+    char *line = "echo hello || world";
+
+    data.tokens = head;
+    int result = parser(&data.tokens, line);
+    mu_assert_int_eq(result, 0);
+
+    result = syntax_checker(&data);
+    mu_assert_int_eq(result, 2);
+
+    // Cleanup
+    t_token *tmp;
+    while (data.tokens)
+    {
+        tmp = data.tokens;
+        data.tokens = data.tokens->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_syntax_checker_redirect_error)
+{
+    t_data data;
+    t_token *head = NULL;
+    char *line = "echo hello > | world";
+
+    data.tokens = head;
+    int result = parser(&data.tokens, line);
+    mu_assert_int_eq(result, 0);
+
+    result = syntax_checker(&data);
+    mu_assert_int_eq(result, 2);
+
+    // Cleanup
+    t_token *tmp;
+    while (data.tokens)
+    {
+        tmp = data.tokens;
+        data.tokens = data.tokens->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
+MU_TEST(test_syntax_checker_backslash_error)
+{
+    t_data data;
+    t_token *head = NULL;
+    char *line = "echo hello \\ world";
+
+    data.tokens = head;
+    int result = parser(&data.tokens, line);
+    mu_assert_int_eq(result, 0);
+
+    result = syntax_checker(&data);
+    mu_assert_int_eq(result, 2);
+
+    // Cleanup
+    t_token *tmp;
+    while (data.tokens)
+    {
+        tmp = data.tokens;
+        data.tokens = data.tokens->next;
+        free(tmp->value);
+        free(tmp);
+    }
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -612,6 +708,10 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_parser_redirection);
     MU_RUN_TEST(test_parser_pipe);
     MU_RUN_TEST(test_parser_builtin);
+    MU_RUN_TEST(test_syntax_checker_basic);
+    MU_RUN_TEST(test_syntax_checker_pipe_error);
+    MU_RUN_TEST(test_syntax_checker_redirect_error);
+    MU_RUN_TEST(test_syntax_checker_backslash_error);
 }
 
 int main(void)

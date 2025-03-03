@@ -32,7 +32,7 @@ int syntax_checker(t_data *data)
             if (check_next(data, tmp, PIPE))
                 return (2);
         }
-        else if (tmp->type = REDIRECT)
+        else if ((tmp->type == REDIRECT))
         {
             if (check_next(data, tmp, REDIRECT))
                 return (2);
