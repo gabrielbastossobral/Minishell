@@ -43,10 +43,8 @@ char *get_var_value(char *var_name, char **envp)
         return (NULL);
     var_len = ft_strlen(var_name);
     i = 0;
-    printf("Looking for variable: '%s'\n", var_name);
     while (envp[i])
     {
-        printf("Checking against: '%s'\n", envp[i]);
         if (ft_strncmp(envp[i], var_name, var_len) == 0 && envp[i][var_len] == '=')
         {
             printf("Found match: '%s'\n", envp[i] + var_len + 1);
@@ -54,7 +52,6 @@ char *get_var_value(char *var_name, char **envp)
         }
         i++;
     }
-    printf("No match found for: '%s'\n", var_name);
     return (NULL);
 }
 
