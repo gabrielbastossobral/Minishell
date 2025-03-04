@@ -6,6 +6,7 @@
 # include "../libs/libft/includes/not_in_standard_includes/not_in_standard.h"
 # include "../libs/libft/includes/ft_stdlib.h"
 # include "../libs/libft/includes/ft_string_functions.h"
+# include "../libs/libft/includes/ft_ctype.h"
 # include <fcntl.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -86,5 +87,16 @@ void	*ft_realloc(void *ptr, size_t size);
 
 //SYNTAX CHECKER
 int		syntax_checker(t_data *data);
+
+// EXPAND
+void	expand(t_data *data);
+char	*expand_var(char *str, char **envp);
+
+// EXPAND VAR UTILS
+void	process_quotes(char c, int *quotes);
+char	*extract_var_name(char *str, int *i);
+char	*append_char_to_result(char *result, char c);
+char	*get_var_value(char *var_name, char **envp);
+char	*append_var_value(char *result, char *var_name, char **envp);
 
 #endif

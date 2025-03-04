@@ -683,6 +683,191 @@ MU_TEST(test_syntax_checker_backslash_error)
     }
 }
 
+MU_TEST(test_get_var_value)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: GET VAR VALUE\n");
+    printf("---------------------------------\n");
+
+    char *envp[] = {
+        "HOME=/home/user",
+        "PATH=/usr/bin:/bin",
+        "USER=john",
+        NULL
+    };
+
+    // Teste básico
+    char *value = get_var_value("HOME", envp);
+    mu_assert_string_eq(value, "/home/user");
+
+    // Teste para variável não existente
+    value = get_var_value("NONEXISTENT", envp);
+    mu_assert(value == NULL, "get_var_value should return NULL for nonexistent variables");
+
+    // Teste para variável vazia
+    value = get_var_value("", envp);
+    mu_assert(value == NULL, "get_var_value should return NULL for empty variable name");
+}
+
+// Função para testar extract_var_name
+MU_TEST(test_extract_var_name)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: EXTRACT VAR NAME\n");
+    printf("---------------------------------\n");
+
+    char *str = "$HOME is where the heart is";
+    int i = 0;
+    char *var_name = extract_var_name(str, &i);
+    
+    mu_assert_string_eq(var_name, "HOME");
+    mu_assert_int_eq(i, 5);
+    free(var_name);
+
+    // Teste com variável seguida de caracteres não alfanuméricos
+    str = "$USER!";
+    i = 0;
+    var_name = extract_var_name(str, &i);
+    
+    mu_assert_string_eq(var_name, "USER");
+    mu_assert_int_eq(i, 5);
+    free(var_name);
+
+    // Teste com variável vazia
+    str = "$";
+    i = 0;
+    var_name = extract_var_name(str, &i);
+    
+    mu_assert_string_eq(var_name, "");
+    mu_assert_int_eq(i, 1);
+    free(var_name);
+}
+
+// Função para testar append_char_to_result
+MU_TEST(test_append_char_to_result)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: APPEND CHAR TO RESULT\n");
+    printf("---------------------------------\n");
+
+    char *result = ft_strdup("");
+    
+    result = append_char_to_result(result, 'H');
+    mu_assert_string_eq(result, "H");
+    
+    result = append_char_to_result(result, 'e');
+    mu_assert_string_eq(result, "He");
+    
+    result = append_char_to_result(result, 'l');
+    result = append_char_to_result(result, 'l');
+    result = append_char_to_result(result, 'o');
+    mu_assert_string_eq(result, "Hello");
+    
+    free(result);
+}
+
+// Função para testar append_var_value
+MU_TEST(test_append_var_value)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: APPEND VAR VALUE\n");
+    printf("---------------------------------\n");
+
+    char *envp[] = {
+        "HOME=/home/user",
+        "PATH=/usr/bin:/bin",
+        "USER=john",
+        NULL
+    };
+
+    char *result = ft_strdup("Hello, ");
+    
+    result = append_var_value(result, "USER", envp);
+    mu_assert_string_eq(result, "Hello, john");
+    
+    result = append_var_value(result, "NONEXISTENT", envp);
+    mu_assert_string_eq(result, "Hello, john"); // Não deve mudar para variáveis inexistentes
+    
+    free(result);
+}
+
+// Função para testar expand_var
+MU_TEST(test_expand_var)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: EXPAND VAR\n");
+    printf("---------------------------------\n");
+
+    char **envp = (char **)malloc(4 * sizeof(char *));
+    envp[0] = ft_strdup("HOME=/home/user");
+    envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    envp[2] = ft_strdup("USER=john");
+    envp[3] = NULL;
+
+    // Teste básico
+    char *expanded = expand_var("$HOME", envp);
+    mu_assert_string_eq("/home/user", expanded);
+    free(expanded);
+
+    // Teste com aspas simples
+    expanded = expand_var("'$HOME'", envp);
+    mu_assert_string_eq("'$HOME'", expanded); // Não deve expandir dentro de aspas simples
+    free(expanded);
+
+    // Teste com aspas duplas
+    expanded = expand_var("\"$HOME\"", envp);
+    mu_assert_string_eq("\"/home/user\"", expanded); // Deve expandir dentro de aspas duplas
+    free(expanded);
+}
+
+// Função para testar expand
+MU_TEST(test_expand)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: EXPAND\n");
+    printf("---------------------------------\n");
+
+    t_data data;
+    t_token *head = NULL;
+    
+    data.envp = (char **)malloc(4 * sizeof(char *));
+    data.envp[0] = ft_strdup("HOME=/home/user");
+    data.envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    data.envp[2] = ft_strdup("USER=john");
+    data.envp[3] = NULL;
+
+    // Configuração de tokens
+    insert_token(&head, "echo");
+    insert_token(&head, "$HOME");
+    insert_token(&head, "$USER");
+    insert_token(&head, "'$PATH'");
+    
+    data.tokens = head;
+    
+    // Executar a expansão
+    expand(&data);
+    
+    // Verificar se os tokens foram expandidos corretamente
+    mu_assert_string_eq(data.tokens->value, "echo");
+    mu_assert_string_eq(data.tokens->next->value, "/home/user"); // Expandido de $HOME
+    mu_assert_string_eq(data.tokens->next->next->value, "john"); // Expandido de $USER
+    mu_assert_string_eq(data.tokens->next->next->next->value, "'$PATH'"); // Não deve expandir dentro de aspas simples
+
+    // Cleanup
+    t_token *tmp;
+    while (data.tokens)
+    {
+        tmp = data.tokens;
+        data.tokens = data.tokens->next;
+        free(tmp->value);
+        free(tmp);
+    }
+    
+    for (int i = 0; i < 3; i++)
+        free(data.envp[i]);
+    free(data.envp);
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -712,6 +897,12 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_syntax_checker_pipe_error);
     MU_RUN_TEST(test_syntax_checker_redirect_error);
     MU_RUN_TEST(test_syntax_checker_backslash_error);
+    MU_RUN_TEST(test_get_var_value);
+    MU_RUN_TEST(test_extract_var_name);
+    MU_RUN_TEST(test_append_char_to_result);
+    MU_RUN_TEST(test_append_var_value);
+    MU_RUN_TEST(test_expand_var);
+    MU_RUN_TEST(test_expand);
 }
 
 int main(void)

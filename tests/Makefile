@@ -20,7 +20,9 @@ SRCS = $(SRC_PATH)/utils.c \
        $(SRC_PATH)/parser_utils.c \
        $(SRC_PATH)/lexer.c \
 	   $(SRC_PATH)/handle_erros.c\
-	   $(SRC_PATH)/syntax_checker.c
+	   $(SRC_PATH)/syntax_checker.c\
+	   $(SRC_PATH)/expand.c\
+	   $(SRC_PATH)/expand_var_utils.c
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
