@@ -43,7 +43,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!parser(&data.tokens, line) && !syntax_checker(&data))
 		{
 			expand(&data);
-			//executer(&data);
+			executor(&data);
 		}
 		//clear(data);
 		free(line);

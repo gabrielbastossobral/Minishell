@@ -24,15 +24,15 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
-typedef struct s_mini
+typedef struct s_exec
 {
-	char	*input;
-	char	*prompt;
-	char	**envp;
-	t_token	*token;
-	char	error;
-	char	exit;
-}	t_mini;
+	pid_t *pid;
+	int status;
+	int nbr_process;
+	int **fds;
+	char **cmd;
+	t_token *tmp;
+}			t_exec;
 
 typedef struct sigaction	t_sig;
 
@@ -40,6 +40,7 @@ typedef struct s_data
 {
 	t_token *tokens;
 	t_sig act;
+	t_exec exec;
 	int exit_error;
 	char **envp;
 }	t_data;
@@ -98,5 +99,13 @@ char	*extract_var_name(char *str, int *i);
 char	*append_char_to_result(char *result, char c);
 char	*get_var_value(char *var_name, char **envp);
 char	*append_var_value(char *result, char *var_name, char **envp);
+
+// EXECUTOR
+void	executor(t_data *data);
+
+// EXECUTOR UTILS
+void	create_pipes(t_exec *ex);
+int		count_process(t_token *tokens);
+t_exec	init_executor(t_data *data);
 
 #endif
