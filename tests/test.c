@@ -868,6 +868,173 @@ MU_TEST(test_expand)
     free(data.envp);
 }
 
+MU_TEST(test_ft_export_basic)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXPORT BASIC\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    char *cmd[] = {"export", "VAR1=value1", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 1);
+    envp[0] = NULL;
+    char ***envp_ptr = &envp;
+
+    ms.error = 0;
+    ft_export(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "VAR1=value1");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp);
+}
+
+MU_TEST(test_ft_export_multiple)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXPORT MULTIPLE\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    char *cmd[] = {"export", "VAR1=value1", "VAR2=value2", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 1);
+    envp[0] = NULL;
+    char ***envp_ptr = &envp;
+
+    ms.error = 0;
+    ft_export(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "VAR1=value1");
+    mu_assert_string_eq(envp[1], "VAR2=value2");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp[1]);
+    free(envp);
+}
+
+MU_TEST(test_ft_export_invalid_identifier)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXPORT INVALID IDENTIFIER\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    char *cmd[] = {"export", "1INVALID=value", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 1);
+    envp[0] = NULL;
+    char ***envp_ptr = &envp;
+
+    ms.error = 0;
+    ft_export(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 42);
+    mu_assert(envp[0] == NULL, "Environment should not be modified");
+
+    // Cleanup
+    free(envp);
+}
+
+MU_TEST(test_ft_export_no_value)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXPORT NO VALUE\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    char *cmd[] = {"export", "VAR1", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 1);
+    envp[0] = NULL;
+    char ***envp_ptr = &envp;
+
+    ms.error = 0;
+    ft_export(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert(envp[0] == NULL, "Environment should not be modified");
+
+    // Cleanup
+    free(envp);
+}
+
+MU_TEST(test_ft_export_existing_var)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXPORT EXISTING VAR\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    char *cmd[] = {"export", "VAR1=new_value", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 2);
+    envp[0] = ft_strdup("VAR1=old_value");
+    envp[1] = NULL;
+    char ***envp_ptr = &envp;
+
+    ms.error = 0;
+    ft_export(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "VAR1=new_value");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp);
+}
+
+MU_TEST(test_ft_cd_valid_dir)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_CD VALID DIR\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+
+    // Simula envp com HOME
+    char **envp = (char **)malloc(sizeof(char *) * 2);
+    envp[0] = ft_strdup("HOME=/home/testuser");
+    envp[1] = NULL;
+    char ***envp_ptr = &envp;
+
+    // Simula comando: cd / (sem erro)
+    char *cmd_valid[] = {"cd", "/", NULL};
+    ft_cd(&ms, cmd_valid, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+
+    // Cleanup
+    free(envp[0]);
+    free(envp);
+}
+
+MU_TEST(test_ft_cd_no_args)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_CD NO ARGS\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+
+    // Simula envp sem HOME
+    char **envp = (char **)malloc(sizeof(char *) * 1);
+    envp[0] = NULL;
+    char ***envp_ptr = &envp;
+
+    // Simula comando: cd (sem argumentos)
+    char *cmd_no_args[] = {"cd", NULL};
+    ft_cd(&ms, cmd_no_args, envp_ptr);
+
+    // Espera erro pois HOME não existe
+    mu_check(ms.error != 0);
+
+    // Cleanup
+    free(envp);
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -903,6 +1070,13 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_append_var_value);
     MU_RUN_TEST(test_expand_var);
     MU_RUN_TEST(test_expand);
+    MU_RUN_TEST(test_ft_export_basic);
+    MU_RUN_TEST(test_ft_export_multiple);
+    MU_RUN_TEST(test_ft_export_invalid_identifier);
+    MU_RUN_TEST(test_ft_export_no_value);
+    MU_RUN_TEST(test_ft_export_existing_var);
+    MU_RUN_TEST(test_ft_cd_valid_dir);
+    MU_RUN_TEST(test_ft_cd_no_args);
 }
 
 int main(void)

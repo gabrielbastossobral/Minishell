@@ -22,7 +22,12 @@ SRCS = $(SRC_PATH)/utils.c \
 	   $(SRC_PATH)/handle_erros.c\
 	   $(SRC_PATH)/syntax_checker.c\
 	   $(SRC_PATH)/expand.c\
-	   $(SRC_PATH)/expand_var_utils.c
+	   $(SRC_PATH)/expand_var_utils.c\
+	   $(SRC_PATH)/free.c\
+	   $(SRC_PATH)/builtins/cd.c\
+	   $(SRC_PATH)/builtins/export.c\
+	   $(SRC_PATH)/builtins/env.c
+
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
