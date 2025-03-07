@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_echo(t_mini *ms, char **cmd)
+void	ft_echo(t_data *ms, char **cmd)
 {
 	size_t	i;
 	int		n_flag;

@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static void	set_dir(t_mini *ms, char *dir, char ***envp)
+static void	set_dir(t_data *ms, char *dir, char ***envp)
 {
 	char	*temp;
 	char	**var;
@@ -60,7 +60,7 @@ static char	*get_home(char **envp)
 	return (home);
 }
 
-void	ft_cd(t_mini *ms, char **cmd, char ***envp)
+void	ft_cd(t_data *ms, char **cmd, char ***envp)
 {
 	if (cmd[1] && !cmd[2])
 		set_dir (ms, cmd[1], envp);

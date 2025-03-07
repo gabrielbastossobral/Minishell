@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_mini *ms, char **cmd, char ***envp)
+void	ft_env(t_data *ms, char **cmd, char ***envp)
 {
 	size_t	i;
 

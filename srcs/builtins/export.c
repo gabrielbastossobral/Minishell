@@ -70,7 +70,7 @@ static int	valid_var(char *var)
 	return (ret);
 }
 
-void	ft_export(t_mini *ms, char **cmd, char ***envp)
+void	ft_export(t_data *ms, char **cmd, char ***envp)
 {
 	int	i;
 	int	var_pos;

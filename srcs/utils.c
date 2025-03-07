@@ -12,6 +12,23 @@
 
 #include "../includes/minishell.h"
 
+char *get_env_value(char *path, char **envp)
+{
+	int i;
+	int path_len;
+
+	if (!path || !envp)
+		return (NULL);
+	path_len = ft_strlen(path);
+	i = -1;
+	while (envp[++i])
+	{
+		if (ft_strncmp(envp[i], path, path_len) == 0 && envp[i][path_len] == '=')
+			return (envp[i] + path_len + 1);
+	}
+	return (NULL);
+}
+
 int	check_quotes(char c, int quotes)
 {
 	if (c == '\"')

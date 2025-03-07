@@ -1,5 +1,27 @@
 #include "../includes/minishell.h"
 
+void close_all_fds(int **fds, int pipe_count)
+{
+    int i;
+
+    if (!fds)
+        return ;
+    i = -1;
+    while (++i < pipe_count)
+    {
+        close(fds[i][0]);
+        close(fds[i][1]);
+    }
+}
+
+void advance_to_next_cmd(t_exec *ex)
+{
+    while (ex->tmp && ex->tmp->type != PIPE)
+        ex->tmp = ex->tmp->next;
+    if (ex->tmp && ex->tmp->type == PIPE)
+        ex->tmp = ex->tmp->next;
+}
+
 static void create_pipes(t_exec *ex)
 {
     int i;

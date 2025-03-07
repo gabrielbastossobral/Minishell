@@ -30,7 +30,7 @@ static void	remove_var(char **envp, char *var)
 	}
 }
 
-void	ft_unset(t_mini *ms, char **cmd, char ***envp)
+void	ft_unset(t_data *ms, char **cmd, char ***envp)
 {
 	size_t	i;
 

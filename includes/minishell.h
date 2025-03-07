@@ -36,16 +36,6 @@ typedef struct s_exec
 	t_token *tmp;
 }			t_exec;
 
-typedef struct s_mini
-{
-	char	*input;
-	char	*prompt;
-	char	**envp;
-	t_token	*token;
-	char	error;
-	char	exit;
-}	t_mini;
-
 typedef struct sigaction	t_sig;
 
 typedef struct s_data
@@ -54,6 +44,7 @@ typedef struct s_data
 	t_sig act;
 	t_exec exec;
 	int exit_error;
+	int error;
 	char **envp;
 }	t_data;
 
@@ -140,6 +131,16 @@ void	executor(t_data *data);
 void	create_pipes(t_exec *ex);
 int		count_process(t_token *tokens);
 t_exec	init_executor(t_data *data);
+void	close_all_fds(int **fds, int pipe_count);
+void	advance_to_next_cmd(t_exec *ex);
+
+// EXECUTOR CMD
+void	child_process(t_data *data, int pipe_index);
+char 	**create_cmd_array(t_token *tokens);
+void	free_pipe_fds(int **fds, int pipe_count);
+
+// EXECUTOR CMD2
+void	execute_external(t_data *data, char **cmd);
 
 // FREE
 char	*free_ptr(char *ptr);
@@ -147,24 +148,24 @@ char	**free_mat(char **mat);
 t_token	*free_token(t_token *token);
 
 // CD
-void	ft_cd(t_mini *ms, char **cmd, char ***envp);
+void	ft_cd(t_data *ms, char **cmd, char ***envp);
 
 // EXPORT
-void	ft_export(t_mini *ms, char **cmd, char ***envp);
+void	ft_export(t_data *ms, char **cmd, char ***envp);
 
 // ENV
-void	ft_env(t_mini *ms, char **cmd, char ***envp);
+void	ft_env(t_data *ms, char **cmd, char ***envp);
 
 // ECHO
-void	ft_echo(t_mini *ms, char **cmd);
+void	ft_echo(t_data *ms, char **cmd);
 
 // EXIT
-void	ft_exit(t_mini *ms, char **cmd);
+void	ft_exit(t_data *ms, char **cmd);
 
 // PWD
-void	ft_pwd(t_mini *ms, char **cmd, char **envp);
+void	ft_pwd(t_data *ms, char **cmd, char **envp);
 
 // UNSET
-void	ft_unset(t_mini *ms, char **cmd, char ***envp);
+void	ft_unset(t_data *ms, char **cmd, char ***envp);
 
 #endif

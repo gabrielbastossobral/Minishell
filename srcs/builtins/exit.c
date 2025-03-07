@@ -39,7 +39,7 @@ static int	check_for_zeros(char *str)
 	return (0);
 }
 
-void	ft_exit(t_mini *ms, char **cmd)
+void	ft_exit(t_data *ms, char **cmd)
 {
 	if (!cmd[1])
 	{
