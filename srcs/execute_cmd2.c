@@ -11,8 +11,11 @@ static void try_exec_direct(char **cmd, char **envp)
 
 static void try_exec_with_path(char *cmd_path, char **cmd, char **envp)
 {
-    if (access(cmd_path, X_OK) == 0)
-        execve(cmd_path, cmd, envp);
+    if (access(cmd_path, F_OK) == -1)
+        return;
+    if (access(cmd_path, X_OK) == -1)
+        return;
+    execve(cmd_path, cmd, envp);
 }
 
 static void try_env_paths(t_data *data, char **cmd)

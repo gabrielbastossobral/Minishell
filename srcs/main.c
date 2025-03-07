@@ -29,6 +29,22 @@ char *get_input()
 	return line;
 }
 
+static void clear_data(t_data *data)
+{
+	t_token *current;
+	t_token *next;
+
+	current = data->tokens;
+	while (current)
+	{
+		next = current->next;
+		free(current->value);
+		free(current);
+		current = next;
+	}
+	data->tokens = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -45,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 			expand(&data);
 			executor(&data);
 		}
-		//clear(data);
+		clear_data(&data);
 		free(line);
 	}
 	return (0);
