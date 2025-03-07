@@ -14,6 +14,8 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <errno.h>
+# include <string.h>
 
 // STRUCTS
 typedef struct s_token
@@ -33,6 +35,16 @@ typedef struct s_exec
 	char **cmd;
 	t_token *tmp;
 }			t_exec;
+
+typedef struct s_mini
+{
+	char	*input;
+	char	*prompt;
+	char	**envp;
+	t_token	*token;
+	char	error;
+	char	exit;
+}	t_mini;
 
 typedef struct sigaction	t_sig;
 
@@ -61,6 +73,27 @@ enum e_type
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
+
+// PROMPT
+# ifndef PROMPT_MSG
+#  define PROMPT_MSG "minishell"
+# endif
+
+# ifndef ERROR_MSG
+#  define ERROR_MSG "\033[1;31mERROR\n\033[0m"
+# endif
+
+# ifndef EXIT_MSG
+#  define EXIT_MSG "\033[1;35mSee you soon, human!\033[0m"
+# endif
+
+# ifndef INVALID_USAGE
+#  define INVALID_USAGE "invalid usage"
+# endif
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
 
 // HANDLE ERROS
 void	handle_erros(char *msg, int stage, void *ptr);
@@ -107,5 +140,28 @@ void	executor(t_data *data);
 void	create_pipes(t_exec *ex);
 int		count_process(t_token *tokens);
 t_exec	init_executor(t_data *data);
+
+// FREE
+char	*free_ptr(char *ptr);
+char	**free_mat(char **mat);
+t_token	*free_token(t_token *token);
+
+// CD
+void	ft_cd(t_mini *ms, char **cmd, char ***envp);
+
+// EXPORT
+void	ft_export(t_mini *ms, char **cmd, char ***envp);
+
+// ENV
+void	ft_env(t_mini *ms, char **cmd, char ***envp);
+
+// ECHO
+void	ft_echo(t_mini *ms, char **cmd);
+
+// EXIT
+void	ft_exit(t_mini *ms, char **cmd);
+
+// PWD
+void	ft_pwd(t_mini *ms, char **cmd, char **envp);
 
 #endif

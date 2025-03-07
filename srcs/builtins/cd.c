@@ -3,43 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 10:57:01 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/26 11:16:01 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:31:41 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	set_dir(t_mini *mini, char *dir, char ***envp)
+static void	set_dir(t_mini *ms, char *dir, char ***envp)
 {
-	char	*oldpwd;
-	char	*pwd;
+	char	*temp;
+	char	**var;
 
-	oldpwd = getcwd(NULL, 0);
-	if (chdir(dir) == -1)
+	temp = NULL;
+	var = ft_calloc (3, sizeof (char *));
+	var[0] = ft_strdup ("export");
+	temp = getcwd (temp, BUFFER_SIZE);
+	if (chdir (dir))
 	{
-		ft_putstr_fd("cd: ", 2);
-		ft_putstr_fd(dir, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		mini->exit = 1;
+		perror (PROMPT_MSG ": cd");
+		ms -> error = 42;
 	}
 	else
 	{
-		pwd = getcwd(NULL, 0);
-		if (!pwd)
-			handle_erros("Error: getcwd", 0, NULL);
-		*envp = update_envp(*envp, "OLDPWD", oldpwd);
-		*envp = update_envp(*envp, "PWD", pwd);
-		free(pwd);
+		var[1] = ft_strjoin ("OLDPWD=", temp);
+		ft_export (ms, var, envp);
+		temp = free_ptr (temp);
+		var[1] = free_ptr (var[1]);
+		temp = getcwd (temp, BUFFER_SIZE);
+		var[1] = ft_strjoin ("PWD=", temp);
+		ft_export (ms, var, envp);
+		ms -> error = 0;
 	}
-	free(oldpwd);
+	temp = free_ptr (temp);
+	var = free_mat (var);
 }
 
-char	*get_home(char **envp)
+static char	*get_home(char **envp)
 {
 	int		i;
 	char	*home;

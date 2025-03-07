@@ -1,37 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_erros.c                                     :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 10:06:25 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/06 21:23:51 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/06 14:08:36 by gabrielsobr       #+#    #+#             */
+/*   Updated: 2025/03/06 19:54:17 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	handle_erros(char *msg, int stage, void *ptr)
+char	*free_ptr(char *ptr)
 {
-    int		i;
-    char	**arr;
+	free(ptr);
+	ptr = NULL;
+	return (NULL);
+}
 
-    if (ptr)
-    {
-        if (stage == 1)
-        {
-            arr = (char **)ptr;
-            i = -1;
-            while (arr[++i])
-                free(arr[i]);
-            free(arr);
-        }
-        else
-        {
-            free(ptr);
-        }
-    }
-    if (msg)
-        ft_printf("%s%s%s\n", RED, msg, RESET);
+char	**free_mat(char **mat)
+{
+	size_t	i;
+
+	i = 0;
+	while (mat && mat[i])
+	{
+		mat[i] = free_ptr(mat[i]);
+		i++;
+	}
+	free (mat);
+	mat = NULL;
+	return (NULL);
+}
+
+t_token	*free_token(t_token *token)
+{
+	t_token	*temp;
+
+	while (token)
+	{
+		temp = token;
+		token -> value = free_ptr (token -> value);
+		token = token -> next;
+		free (temp);
+	}
+	return (NULL);
 }
