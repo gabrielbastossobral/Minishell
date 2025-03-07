@@ -16,7 +16,7 @@ static void setup_redirections(t_data *data, int pipe_index)
 {
     int pipe_count;
 
-    pipe_count = data->exec.nbr_process - 1;
+    pipe_count = data->exec.nbr_process - 1;    
     if (pipe_index > 0)
         dup2(data->exec.fds[pipe_index - 1][0], STDIN_FILENO);
     if (pipe_index < pipe_count)
@@ -26,7 +26,19 @@ static void setup_redirections(t_data *data, int pipe_index)
 void child_process(t_data *data, int pipe_index)
 {
     char **cmd;
+    t_token *token_ptr;
+    int i;
 
+    i = -1;
+    token_ptr = data->exec.tmp;
+    while (++i < pipe_index && token_ptr) 
+    {
+        while (token_ptr && token_ptr->type != PIPE)
+            token_ptr = token_ptr->next;
+        if (token_ptr && token_ptr->type == PIPE)
+            token_ptr = token_ptr->next;
+    }
+    data->exec.tmp = token_ptr;
     setup_redirections(data, pipe_index);
     close_all_fds(data->exec.fds, data->exec.nbr_process - 1);
     cmd = create_cmd_array(data->exec.tmp);
