@@ -40,6 +40,27 @@ static void create_child_process(t_data *data, t_exec *ex)
     }
 }
 
+int execute_builtin(t_data *data, char **cmd)
+{
+    if (!ft_strncmp(cmd[0], "echo", 5))
+        ft_echo(data, cmd);
+    else if (!ft_strncmp(cmd[0], "cd", 3))
+        ft_cd(data, cmd, &data->envp);
+    else if (!ft_strncmp(cmd[0], "pwd", 4))
+        ft_pwd(data, cmd, data->envp);
+    else if (!ft_strncmp(cmd[0], "export", 7))
+        ft_export(data, cmd, &data->envp);
+    else if (!ft_strncmp(cmd[0], "unset", 6))
+        ft_unset(data, cmd, &data->envp);
+    else if (!ft_strncmp(cmd[0], "env", 4))
+        ft_env(data, cmd, &data->envp);
+    else if (!ft_strncmp(cmd[0], "exit", 5))
+        ft_exit(data, cmd);
+    else
+        return (0);
+    return (1);
+}
+
 void executor(t_data *data)
 {
     t_exec ex;

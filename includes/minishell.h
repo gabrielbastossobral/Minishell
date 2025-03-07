@@ -94,6 +94,7 @@ int		check_quotes(char c, int quotes);
 void	free_matrix(char **matrix);
 int		ft_isspace(char c);
 char 	**copy_envp(char **envp);
+char *get_env_value(char *path, char **envp);
 
 // LEXER
 char	**lexer(char *input);
@@ -126,10 +127,9 @@ char	*append_var_value(char *result, char *var_name, char **envp);
 
 // EXECUTOR
 void	executor(t_data *data);
+int 	execute_builtin(t_data *data, char **cmd);
 
 // EXECUTOR UTILS
-void	create_pipes(t_exec *ex);
-int		count_process(t_token *tokens);
 t_exec	init_executor(t_data *data);
 void	close_all_fds(int **fds, int pipe_count);
 void	advance_to_next_cmd(t_exec *ex);

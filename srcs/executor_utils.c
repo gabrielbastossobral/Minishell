@@ -37,7 +37,7 @@ static void create_pipes(t_exec *ex)
     while (i < pipe_count)
     {
         ex->fds[i] = malloc(sizeof(int) * 2);
-        if (!ex->fds[i] || pipe(ex->fds[i] == -1))
+        if (!ex->fds[i] || pipe(ex->fds[i]) == -1)
             handle_erros("Error: pipe failed", 0, NULL);
         i++;
     }

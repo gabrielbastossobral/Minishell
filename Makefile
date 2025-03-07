@@ -9,12 +9,15 @@ MAKE_NO_PRINT = $(MAKE) --no-print-directory
 #===============================PATH===========================================#
 
 SRC_PATH = ./srcs
+BUILTIN_PATH = $(SRC_PATH)/builtins
 LIB_PATH = ./libs/libft
 INC_PATH = ./includes
 
 #==============================SOURCES=========================================#
 
 SRCS = $(wildcard $(SRC_PATH)/*.c)
+BUILTIN_SRCS = $(wildcard $(BUILTIN_PATH)/*.c)
+SRCS += $(BUILTIN_SRCS)
 OBJS = $(SRCS:.c=.o)
 HEADERS = $(INC_PATH)/minishell.h
 
