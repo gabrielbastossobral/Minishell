@@ -164,4 +164,7 @@ void	ft_exit(t_mini *ms, char **cmd);
 // PWD
 void	ft_pwd(t_mini *ms, char **cmd, char **envp);
 
+// UNSET
+void	ft_unset(t_mini *ms, char **cmd, char ***envp);
+
 #endif

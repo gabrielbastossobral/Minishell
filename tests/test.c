@@ -1188,6 +1188,112 @@ MU_TEST(test_ft_pwd_missing_env)
     mu_assert_int_eq(ms.error, 0);
 }
 
+MU_TEST(test_ft_unset_basic)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_UNSET BASIC\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"unset", "USER", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 3);
+    envp[0] = ft_strdup("USER=john");
+    envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    envp[2] = NULL;
+    char ***envp_ptr = &envp;
+
+    ft_unset(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "PATH=/usr/bin:/bin");
+    mu_assert(envp[1] == NULL, "Environment should be NULL terminated");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp);
+}
+
+MU_TEST(test_ft_unset_multiple)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_UNSET MULTIPLE\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"unset", "USER", "PATH", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 3);
+    envp[0] = ft_strdup("USER=john");
+    envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    envp[2] = NULL;
+    char ***envp_ptr = &envp;
+
+    ft_unset(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert(envp[0] == NULL, "Environment should be NULL terminated");
+
+    // Cleanup
+    free(envp);
+}
+
+MU_TEST(test_ft_unset_nonexistent)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_UNSET NONEXISTENT\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"unset", "NONEXISTENT", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 3);
+    envp[0] = ft_strdup("USER=john");
+    envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    envp[2] = NULL;
+    char ***envp_ptr = &envp;
+
+    ft_unset(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "USER=john");
+    mu_assert_string_eq(envp[1], "PATH=/usr/bin:/bin");
+    mu_assert(envp[2] == NULL, "Environment should be NULL terminated");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp[1]);
+    free(envp);
+}
+
+MU_TEST(test_ft_unset_empty)
+{
+     printf("---------------------------------\n");
+    printf("TESTE: FT_UNSET EMPTY\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"unset", "", NULL};
+    char **envp = (char **)malloc(sizeof(char *) * 3);
+    envp[0] = ft_strdup("USER=john");
+    envp[1] = ft_strdup("PATH=/usr/bin:/bin");
+    envp[2] = NULL;
+    char ***envp_ptr = &envp;
+
+    ft_unset(&ms, cmd, envp_ptr);
+
+    mu_assert_int_eq(ms.error, 0);
+    mu_assert_string_eq(envp[0], "USER=john");
+    mu_assert_string_eq(envp[1], "PATH=/usr/bin:/bin");
+    mu_assert(envp[2] == NULL, "Environment should be NULL terminated");
+
+    // Cleanup
+    free(envp[0]);
+    free(envp[1]);
+    free(envp);
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -1240,6 +1346,10 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_ft_pwd_no_args);
     MU_RUN_TEST(test_ft_pwd_invalid_usage);
     MU_RUN_TEST(test_ft_pwd_missing_env);
+    MU_RUN_TEST(test_ft_unset_basic);
+    MU_RUN_TEST(test_ft_unset_multiple);
+    MU_RUN_TEST(test_ft_unset_nonexistent);
+    MU_RUN_TEST(test_ft_unset_empty);
 
 }
 
