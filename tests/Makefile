@@ -26,7 +26,9 @@ SRCS = $(SRC_PATH)/utils.c \
 	   $(SRC_PATH)/free.c\
 	   $(SRC_PATH)/builtins/cd.c\
 	   $(SRC_PATH)/builtins/export.c\
-	   $(SRC_PATH)/builtins/env.c
+	   $(SRC_PATH)/builtins/env.c\
+	   $(SRC_PATH)/builtins/echo.c\
+	   $(SRC_PATH)/builtins/exit.c
 
 OBJS = $(SRCS:.c=.o)
 TEST_SRCS = $(wildcard *.c)

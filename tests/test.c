@@ -1035,6 +1035,110 @@ MU_TEST(test_ft_cd_no_args)
     free(envp);
 }
 
+MU_TEST(test_ft_echo_simple)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: ECHO SIMPLE\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+
+    /* Comando: echo Hello World */
+    char *cmd[] = {"echo", "Hello", "World", NULL};
+    ft_echo(&ms, cmd);
+
+    mu_assert_int_eq(ms.error, 0);
+}
+
+MU_TEST(test_ft_echo_flag_n)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: ECHO FLAG -n\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+
+    /* Comando: echo -n Hello World */
+    char *cmd[] = {"echo", "-n", "Hello", "World", NULL};
+    ft_echo(&ms, cmd);
+
+    mu_assert_int_eq(ms.error, 0);
+}
+
+MU_TEST(test_ft_echo_no_args)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: ECHO SEM ARGUMENTOS\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+
+    /* Comando: echo (nenhum argumento adicional) */
+    char *cmd[] = {"echo", NULL};
+    ft_echo(&ms, cmd);
+
+    mu_assert_int_eq(ms.error, 0);
+}
+
+MU_TEST(test_ft_exit_no_args)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXIT NO ARGS\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"exit", NULL};
+
+    ft_exit(&ms, cmd);
+    mu_assert_int_eq(ms.error, 0);
+}
+
+MU_TEST(test_ft_exit_valid_number)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXIT VALID NUMBER\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"exit", "42", NULL};
+
+    ft_exit(&ms, cmd);
+    mu_assert_int_eq(ms.error, 42);
+}
+
+MU_TEST(test_ft_exit_invalid_number)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXIT INVALID NUMBER\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"exit", "abc", NULL};
+
+    ft_exit(&ms, cmd);
+    mu_assert_int_eq(ms.error, -1);
+}
+
+MU_TEST(test_ft_exit_too_many_args)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_EXIT TOO MANY ARGS\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"exit", "123", "456", NULL};
+
+    ft_exit(&ms, cmd);
+    mu_assert_int_eq(ms.error, 42);
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -1077,6 +1181,14 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_ft_export_existing_var);
     MU_RUN_TEST(test_ft_cd_valid_dir);
     MU_RUN_TEST(test_ft_cd_no_args);
+    MU_RUN_TEST(test_ft_echo_simple);
+    MU_RUN_TEST(test_ft_echo_flag_n);
+    MU_RUN_TEST(test_ft_echo_no_args);
+    MU_RUN_TEST(test_ft_exit_no_args);
+    MU_RUN_TEST(test_ft_exit_valid_number);
+    MU_RUN_TEST(test_ft_exit_invalid_number);
+    MU_RUN_TEST(test_ft_exit_too_many_args);
+
 }
 
 int main(void)
