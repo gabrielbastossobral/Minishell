@@ -1139,6 +1139,55 @@ MU_TEST(test_ft_exit_too_many_args)
     mu_assert_int_eq(ms.error, 42);
 }
 
+MU_TEST(test_ft_pwd_no_args)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_PWD NO ARGS\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"pwd", NULL};
+    char *envp[] = {"PWD=/home/testuser", NULL};
+
+    ft_pwd(&ms, cmd, envp);
+
+    mu_assert_int_eq(ms.error, 0);
+}
+
+MU_TEST(test_ft_pwd_invalid_usage)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_PWD INVALID USAGE\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"pwd", "extra_arg", NULL};
+    char *envp[] = {"PWD=/home/testuser", NULL};
+
+    ft_pwd(&ms, cmd, envp);
+
+    mu_assert_int_eq(ms.error, 42);
+}
+
+MU_TEST(test_ft_pwd_missing_env)
+{
+    printf("---------------------------------\n");
+    printf("TESTE: FT_PWD MISSING ENV\n");
+    printf("---------------------------------\n");
+
+    t_mini ms;
+    ms.error = 0;
+    char *cmd[] = {"pwd", NULL};
+    char *envp[] = {"USER=john", NULL}; // sem PWD
+
+    ft_pwd(&ms, cmd, envp);
+
+    // Apenas verifica se não ocorre erro ou crash
+    mu_assert_int_eq(ms.error, 0);
+}
+
 MU_TEST_SUITE(test_suite)
 {
     MU_RUN_TEST(check_quotes_basic_test);
@@ -1188,6 +1237,9 @@ MU_TEST_SUITE(test_suite)
     MU_RUN_TEST(test_ft_exit_valid_number);
     MU_RUN_TEST(test_ft_exit_invalid_number);
     MU_RUN_TEST(test_ft_exit_too_many_args);
+    MU_RUN_TEST(test_ft_pwd_no_args);
+    MU_RUN_TEST(test_ft_pwd_invalid_usage);
+    MU_RUN_TEST(test_ft_pwd_missing_env);
 
 }
 
