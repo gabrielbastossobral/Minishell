@@ -12,6 +12,51 @@
 
 #include "../includes/minishell.h"
 
+void detect_quote_type(char *str, t_token *token)
+{
+    int i;
+    
+    i = 0;
+    token->quote_type = 0;
+    while (str[i] && !token->quote_type)
+    {
+        if (str[i] == '\'' || str[i] == '\"')
+            token->quote_type = str[i];
+        i++;
+    }
+}
+
+char *remove_quotes(char *str)
+{
+    int i;
+    int j;
+    char *result;
+    char quote_char;
+    
+    i = 0;
+    j = 0;
+    quote_char = 0;
+    result = malloc(ft_strlen(str) + 1);
+    if (!result)
+        handle_erros("Error: malloc failed", 0, NULL);
+    while (str[i])
+    {
+        if ((str[i] == '\'' || str[i] == '\"') && 
+            (quote_char == 0 || quote_char == str[i]))
+        {
+            if (quote_char == 0)
+                quote_char = str[i];
+            else
+                quote_char = 0;
+            i++;
+        }
+        else
+            result[j++] = str[i++];
+    }
+    result[j] = '\0';
+    return (result);
+}
+
 void	check_pipe(char *line, t_token **head)
 {
 	char	*input;

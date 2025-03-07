@@ -11,7 +11,7 @@ MAKE_NO_PRINT = $(MAKE) --no-print-directory
 SRC_PATH = ../srcs
 HEADER = ../includes
 LIB_PATH = ../libs/libft
-TEST_PATH = ./tests
+TEST_PATH = .
 
 #==============================SOURCES=========================================#
 
@@ -33,7 +33,7 @@ SRCS = $(SRC_PATH)/utils.c \
 	   $(SRC_PATH)/builtins/unset.c
 
 OBJS = $(SRCS:.c=.o)
-TEST_SRCS = $(wildcard *.c)
+TEST_SRCS = $(TEST_PATH)/execution_tests.c
 TEST_OBJS = $(TEST_SRCS:.c=.o)
 
 #===============================RULES===========================================#

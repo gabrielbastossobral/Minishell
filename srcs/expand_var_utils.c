@@ -46,10 +46,7 @@ char *get_var_value(char *var_name, char **envp)
     while (envp[i])
     {
         if (ft_strncmp(envp[i], var_name, var_len) == 0 && envp[i][var_len] == '=')
-        {
-            printf("Found match: '%s'\n", envp[i] + var_len + 1);
             return (envp[i] + var_len + 1);
-        }
         i++;
     }
     return (NULL);

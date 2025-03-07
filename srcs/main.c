@@ -24,6 +24,11 @@ char *get_input()
 	char *line;
 
 	line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
+	if (!line)
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		exit(0);
+	}
 	if (line && *line)
 		add_history(line);
 	return line;

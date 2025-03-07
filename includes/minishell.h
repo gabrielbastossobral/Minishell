@@ -22,6 +22,7 @@ typedef struct s_token
 {
 	char			*value;
 	int				type;
+	char			quote_type;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -110,6 +111,8 @@ int		parser(t_token **head, char *str);
 void	split_line(char *line, char ***split, int *j);
 void	check_pipe(char *line, t_token **head);
 void	*ft_realloc(void *ptr, size_t size);
+char	*remove_quotes(char *str);
+void 	detect_quote_type(char *str, t_token *token);
 
 //SYNTAX CHECKER
 int		syntax_checker(t_data *data);

@@ -10,8 +10,6 @@ char *expand_var(char *str, char **envp)
     i = 0;
     result = ft_strdup("");
     quotes = 0;
-    if (str[0] == '\'' && str[strlen(str) - 1] == '\'')
-        return ft_strdup(str);
     while (str[i])
     {
         process_quotes(str[i], &quotes);
@@ -35,7 +33,7 @@ void expand(t_data *data)
     token = data->tokens;
     while (token)
     {
-        if (ft_strchr(token->value, '$'))
+        if (ft_strchr(token->value, '$') && token->quote_type != '\'')
         {
             expanded_value = expand_var(token->value, data->envp);
             free(token->value);

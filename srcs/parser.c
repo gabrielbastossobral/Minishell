@@ -16,11 +16,14 @@ void	insert_token(t_token **tokens, char *value)
 {
 	t_token	*new;
 	t_token	*last;
+	char 	*cleaned_value;
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
 		handle_erros("Error: malloc", 0, NULL);
-	new->value = ft_strdup(value);
+	detect_quote_type(value, new);
+	cleaned_value = remove_quotes(value);
+	new->value = cleaned_value;
 	new->type = 0;
 	new->next = NULL;
 	new->prev = NULL;
