@@ -37,8 +37,6 @@ char *remove_quotes(char *str)
     j = 0;
     quote_char = 0;
     result = malloc(ft_strlen(str) + 1);
-    if (!result)
-        handle_erros("Error: malloc failed", 0, NULL);
     while (str[i])
     {
         if ((str[i] == '\'' || str[i] == '\"') && 

@@ -67,6 +67,14 @@ void executor(t_data *data)
     char **cmd;
     int is_builtin;
 
+    printf("DEBUG: Tokens antes da execução:\n");
+    t_token *tmp = data->tokens;
+    while (tmp) {
+        printf("  Token: [%s] (tipo: %d, quote_type: %c)\n", 
+               tmp->value, tmp->type, tmp->quote_type ? tmp->quote_type : 'N');
+        tmp = tmp->next;
+    }
+
     ex = init_executor(data);
     data->exec = ex;
     if (ex.nbr_process == 1)

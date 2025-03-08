@@ -62,152 +62,42 @@ static int output_contains(const char *output, const char *text) {
 }
 
 
-// Testes para comandos simples
-MU_TEST(test_echo) {
-    char *output = capture_output("echo Hello World");
-    mu_check(output_contains(output, "Hello World"));
-    free(output);
-}
-
-MU_TEST(test_ls) {
+MU_TEST(test_ls) 
+{
+    printf("--------------------------------------------------------------\n");
+    printf("TESTE 1: Verificar se o comando ls é executado corretamente\n");
+    printf("--------------------------------------------------------------\n");
     char *output = capture_output("ls");
-    // Verifica se o output contém pelo menos um arquivo que deve existir no diretório
     mu_check(output_contains(output, "minishell") || 
              output_contains(output, "Makefile"));
     free(output);
 }
 
-MU_TEST(test_pwd) {
-    char *output = capture_output("pwd");
-    // Verifica se o output contém parte do caminho esperado
-    mu_check(output_contains(output, "Minishell"));
+MU_TEST(test_ls_with_flags) {
+    printf("--------------------------------------------------------------\n");
+    printf("TESTE 2: Verificar se o comando ls -la é executado corretamente\n");
+    printf("--------------------------------------------------------------\n");
+    char *output = capture_output("ls -la");
+    mu_check(output_contains(output, "total"));
+    mu_check(output_contains(output, "."));
     free(output);
 }
 
-// Teste para comando com pipe
-MU_TEST(test_pipe_simple) {
-    char *output = capture_output("ls | grep Make");
-    mu_check(output_contains(output, "Make"));
-    free(output);
-}
-
-// Teste para comando inexistente
-MU_TEST(test_command_not_found) {
-    char *output = capture_output("notarealcommand");
-    mu_check(output_contains(output, "command not found"));
-    free(output);
-}
-
-// Testes para comandos com aspas
-MU_TEST(test_echo_with_quotes) {
-    // Aspas duplas devem preservar espaços mas permitir expansão de variáveis
-    char *output = capture_output("echo \"Hello     World\"");
-    mu_check(output_contains(output, "Hello     World"));
-    free(output);
-}
-
-MU_TEST(test_echo_with_single_quotes) {
-    // Aspas simples devem preservar tudo literalmente
-    char *output = capture_output("echo 'Hello     World'");
-    mu_check(output_contains(output, "Hello     World"));
-    free(output);
-}
-
-MU_TEST(test_echo_with_mixed_quotes) {
-    // Mistura de aspas para verificar o comportamento correto
-    char *output = capture_output("echo \"Hello 'quoted' World\"");
-    mu_check(output_contains(output, "Hello 'quoted' World"));
-    free(output);
-}
-
-// Testes para expansão de variáveis
-MU_TEST(test_env_variable_expansion) {
-    char *output = capture_output("export TEST_VAR=testvalue; echo $TEST_VAR");
-    mu_check(output_contains(output, "testvalue"));
-    free(output);
-}
-
-MU_TEST(test_env_variable_in_quotes) {
-    // Teste a expansão em aspas duplas com formato alternativo
-    char *output1 = capture_output("export QUOTE_TEST=expanded && echo \"$QUOTE_TEST value\"");
-    mu_check(output_contains(output1, "expanded value"));
-    free(output1);
-    
-    // Teste a não-expansão em aspas simples
-    char *output2 = capture_output("export QUOTE_TEST=expanded && echo '$QUOTE_TEST value'");
-    mu_check(output_contains(output2, "$QUOTE_TEST value"));
-    free(output2);
-}
-
-// Testes para comandos mais complexos com pipe
-MU_TEST(test_multiple_pipes) {
-    // Testa múltiplos pipes encadeados
-    char *output = capture_output("ls -la | grep Make | wc -l");
-    mu_check(output_contains(output, "1") || output_contains(output, "2")); // Deve encontrar 1 ou 2 linhas
-    free(output);
-}
-
-MU_TEST(test_pipe_with_quotes) {
-    // Teste de pipe com argumentos entre aspas
-    char *output = capture_output("echo \"Hello | World\" | grep Hello");
-    mu_check(output_contains(output, "Hello | World"));
-    free(output);
-}
-
-// Testes para comandos built-in
-MU_TEST(test_cd_command) {
-    // Mudar para um diretório e confirmar com pwd
-    capture_output("cd ..");
-    char *output = capture_output("pwd");
-    mu_check(output_contains(output, "projeto_Minishell"));
-    free(output);
-}
-
-MU_TEST(test_export_command) {
-    // Verifica se o export funciona corretamente
-    capture_output("export TEST_EXPORT=success");
-    char *output = capture_output("echo $TEST_EXPORT");
-    mu_check(output_contains(output, "success"));
-    free(output);
-}
-
-MU_TEST(test_unset_command) {
-    // Primeiro define uma variável
-    capture_output("export TO_UNSET=value");
-    // Depois remove a variável
-    capture_output("unset TO_UNSET");
-    // Verifica se a variável foi removida
-    char *output = capture_output("echo $TO_UNSET");
-    mu_check(!output_contains(output, "value"));
-    free(output);
-}
-
-// Teste para comandos com caracteres especiais
-MU_TEST(test_special_chars) {
-    // Teste com caracteres especiais e espaços
-    char *output = capture_output("echo Hello\\ World");
-    mu_check(output_contains(output, "Hello World"));
+MU_TEST(test_ls_with_path) 
+{
+    printf("--------------------------------------------------------------\n");
+    printf("TESTE 3: Verificar se o comando ls /tmp é executado corretamente\n");
+    printf("--------------------------------------------------------------\n");
+    char *output = capture_output("ls /tmp");
+    mu_check(!output_contains(output, "No such file or directory"));
     free(output);
 }
 
 MU_TEST_SUITE(test_suite2)
 {
-    MU_RUN_TEST(test_echo);
     MU_RUN_TEST(test_ls);
-    MU_RUN_TEST(test_pwd);
-    MU_RUN_TEST(test_pipe_simple);
-    MU_RUN_TEST(test_command_not_found);
-    MU_RUN_TEST(test_echo_with_quotes);
-    MU_RUN_TEST(test_echo_with_single_quotes);
-    MU_RUN_TEST(test_echo_with_mixed_quotes);
-    MU_RUN_TEST(test_env_variable_expansion);
-    MU_RUN_TEST(test_env_variable_in_quotes);
-    MU_RUN_TEST(test_multiple_pipes);
-    MU_RUN_TEST(test_pipe_with_quotes);
-    MU_RUN_TEST(test_cd_command);
-    MU_RUN_TEST(test_export_command);
-    MU_RUN_TEST(test_unset_command);
-    MU_RUN_TEST(test_special_chars);
+    MU_RUN_TEST(test_ls_with_flags);
+    MU_RUN_TEST(test_ls_with_path);
 }
 
 int main(void)

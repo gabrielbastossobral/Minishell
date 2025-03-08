@@ -4,8 +4,25 @@ static void try_exec_direct(char **cmd, char **envp)
 {
     if (cmd[0][0] == '/' || (cmd[0][0] == '.' && cmd[0][1] == '/'))
     {
-        if (access(cmd[0], X_OK) == 0)
-            execve(cmd[0], cmd, envp);
+        if (access(cmd[0], F_OK) == 0)
+        {
+            if (access(cmd[0], X_OK) == 0)
+                execve(cmd[0], cmd, envp);
+            else
+            {
+                ft_putstr_fd("minishell: ", STDERR_FILENO);
+                ft_putstr_fd(cmd[0], STDERR_FILENO);
+                ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+                exit(126);
+            }
+        }
+        else
+        {
+            ft_putstr_fd("minishell: ", STDERR_FILENO);
+            ft_putstr_fd(cmd[0], STDERR_FILENO);
+            ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+            exit(127);
+        }
     }
 }
 
@@ -46,6 +63,13 @@ static void try_env_paths(t_data *data, char **cmd)
 
 void execute_external(t_data *data, char **cmd)
 {
+    if (data->exec.tmp && data->exec.tmp->quote_type)
+    {
+        ft_putstr_fd("minishell: ", STDERR_FILENO);
+        ft_putstr_fd(cmd[0], STDERR_FILENO);
+        ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+        exit(127);
+    }
     if (!cmd || !cmd[0])
     {
         handle_erros("Error: command not found", 0, NULL);
