@@ -93,11 +93,36 @@ MU_TEST(test_ls_with_path)
     free(output);
 }
 
+MU_TEST(test_quoted_command) {
+    printf("--------------------------------------------------------------\n");
+    printf("TESTE 4: Verificar erro quando comando está entre aspas\n");
+    printf("--------------------------------------------------------------\n");
+    char *output = capture_output("\"/bin/echo\" Hello World");
+    
+    mu_check(output_contains(output, "No such file or directory"));    
+    mu_check(!output_contains(output, "Hello World"));
+    free(output);
+}
+
+MU_TEST(test_quoted_command_with_quotes) {
+    printf("--------------------------------------------------------------\n");
+    printf("TESTE 5: Verificar erro quando comando está entre aspas (com argumentos entre aspas)\n");
+    printf("--------------------------------------------------------------\n");
+    char *output = capture_output("\"/bin/echo\" \"Hello World\"");
+    
+    mu_check(output_contains(output, "No such file or directory"));    
+    mu_check(!output_contains(output, "Hello World"));
+    free(output);
+}
+
+
 MU_TEST_SUITE(test_suite2)
 {
     MU_RUN_TEST(test_ls);
     MU_RUN_TEST(test_ls_with_flags);
     MU_RUN_TEST(test_ls_with_path);
+    MU_RUN_TEST(test_quoted_command);
+    MU_RUN_TEST(test_quoted_command_with_quotes);
 }
 
 int main(void)

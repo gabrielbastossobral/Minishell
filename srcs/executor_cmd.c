@@ -39,6 +39,7 @@ void child_process(t_data *data, int pipe_index)
             token_ptr = token_ptr->next;
     }
     data->exec.tmp = token_ptr;
+    ignore_signals_in_child();
     setup_redirections(data, pipe_index);
     close_all_fds(data->exec.fds, data->exec.nbr_process - 1);
     cmd = create_cmd_array(data->exec.tmp);

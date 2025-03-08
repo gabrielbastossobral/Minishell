@@ -20,6 +20,8 @@ static void wait_for_children(t_exec *ex, t_data *data)
         if (WIFEXITED(status))
             data->exit_error = WEXITSTATUS(status);
     }
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
 }
 
 static void create_child_process(t_data *data, t_exec *ex)
@@ -66,15 +68,6 @@ void executor(t_data *data)
     t_exec ex;
     char **cmd;
     int is_builtin;
-
-    printf("DEBUG: Tokens antes da execução:\n");
-    t_token *tmp = data->tokens;
-    while (tmp) {
-        printf("  Token: [%s] (tipo: %d, quote_type: %c)\n", 
-               tmp->value, tmp->type, tmp->quote_type ? tmp->quote_type : 'N');
-        tmp = tmp->next;
-    }
-
     ex = init_executor(data);
     data->exec = ex;
     if (ex.nbr_process == 1)
@@ -83,10 +76,14 @@ void executor(t_data *data)
         is_builtin = execute_builtin(data, cmd);
         free_matrix(cmd);
         if (is_builtin)
-            return ;
+        {
+            fflush(stdout);
+            return;
+        }
     }
     create_child_process(data, &ex);
     close_all_fds(ex.fds, ex.nbr_process -1);
     wait_for_children(&ex, data);
-    cleanup_executor(&ex); 
+    cleanup_executor(&ex);
+    fflush(stdout); 
 }

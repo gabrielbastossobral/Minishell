@@ -145,6 +145,11 @@ void	free_pipe_fds(int **fds, int pipe_count);
 // EXECUTOR CMD2
 void	execute_external(t_data *data, char **cmd);
 
+// SIGNALS
+void	handle_sigint(int sig);
+void	ignore_signals_in_child(void);
+void	setup_signals(void);
+
 // FREE
 char	*free_ptr(char *ptr);
 char	**free_mat(char **mat);

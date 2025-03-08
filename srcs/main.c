@@ -23,6 +23,7 @@ char *get_input()
 {
 	char *line;
 
+	rl_on_new_line();
 	line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
 	if (!line)
 	{
@@ -58,6 +59,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv[1])
 		handle_erros("Usage: ./minishell", 0, NULL);
 	init(&data, envp);
+	setup_signals();
 	while (1)
 	{
 		line = get_input();
@@ -65,6 +67,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			expand(&data);
 			executor(&data);
+			rl_on_new_line();
 		}
 		clear_data(&data);
 		free(line);
