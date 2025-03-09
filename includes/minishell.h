@@ -57,8 +57,10 @@ enum e_type
 	BUILDIN = 12,
 	ARG = 13,
 	ARG_FILE = 14,
-	REDIRECT = 15,
-	HEREDOC = 16
+	REDIR_OUT = 15,
+	REDIR_IN = 16,
+	APPEND = 17,
+	HEREDOC = 18
 };
 
 // COLORS
@@ -154,6 +156,13 @@ void	setup_signals(void);
 char	*free_ptr(char *ptr);
 char	**free_mat(char **mat);
 t_token	*free_token(t_token *token);
+
+// HANDLE REDIRS
+int		handle_redir_out(char *filename);
+int		handle_redir_in(char *filename);
+int		handle_redir_append(char *filename);
+int		handle_heredoc(char *delimiter);
+int		setup_redirections_for_token(t_token *tokens);
 
 // CD
 void	ft_cd(t_data *ms, char **cmd, char ***envp);
