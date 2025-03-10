@@ -36,6 +36,20 @@ static char	*filler(char *input, int pos)
 	return (new);
 }
 
+static char	**split_quoted(char *str)
+{
+    char	**result;
+    int		i;
+ 
+    result = ft_calloc(2, sizeof(char *));
+    if (!result)
+        return (NULL);    
+    i = 0;
+	split_line(str, &result, &i);
+	result[i] = NULL;
+    return (result);
+}
+
 char	**lexer(char *input)
 {
 	int		i;
@@ -58,7 +72,7 @@ char	**lexer(char *input)
 	}
 	if (quotes)
 		handle_erros(NULL, 0, temp);
-	ret = ft_split(temp, ' ');
+	ret = split_quoted(temp);
 	handle_erros(NULL, 0, temp);
 	return (ret);
 }
