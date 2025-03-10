@@ -7,6 +7,7 @@
 # include "../libs/libft/includes/ft_stdlib.h"
 # include "../libs/libft/includes/ft_string_functions.h"
 # include "../libs/libft/includes/ft_ctype.h"
+# include "../libs/libft/includes/not_in_standard_includes/get_next_line.h"
 # include <fcntl.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -62,6 +63,8 @@ enum e_type
 	APPEND = 17,
 	HEREDOC = 18
 };
+
+extern int g_heredoc_status;
 
 // COLORS
 # define RED "\033[0;31m"
@@ -151,6 +154,8 @@ void	execute_external(t_data *data, char **cmd);
 void	handle_sigint(int sig);
 void	ignore_signals_in_child(void);
 void	setup_signals(void);
+void	handle_sigint_heredoc(int sig);
+void	setup_signals_heredoc(void);
 
 // FREE
 char	*free_ptr(char *ptr);
@@ -163,6 +168,11 @@ int		handle_redir_in(char *filename);
 int		handle_redir_append(char *filename);
 int		handle_heredoc(char *delimiter);
 int		setup_redirections_for_token(t_token *tokens);
+
+// HANDLE REDIRS UTILS
+int		prepare_heredoc_pipe(int *pipefd, int *stdin_copy);
+int		process_heredoc_line(char *line, char *delimiter, int pipefd);
+void	cleanup_heredoc(int *pipefd, int stdin_copy);
 
 // CD
 void	ft_cd(t_data *ms, char **cmd, char ***envp);

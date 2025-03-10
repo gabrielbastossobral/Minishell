@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"not_in_standard.h": "c"
+		"not_in_standard.h": "c",
+		"minishell.h": "c"
 	}
 }

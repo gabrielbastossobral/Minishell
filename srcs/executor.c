@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:36:31 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:40:13 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:45:46 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,41 @@ void	executor(t_data *data)
 	t_exec	ex;
 	char	**cmd;
 	int		is_builtin;
+	int		saved_stdin;
+	int		saved_stdout;
 
+	saved_stdin = -1;
+	saved_stdout = -1;
 	ex = init_executor(data);
 	data->exec = ex;
 	if (ex.nbr_process == 1)
 	{
+		saved_stdin = dup(STDIN_FILENO);
+		saved_stdout = dup(STDOUT_FILENO);
+		if (!setup_redirections_for_token(data->tokens))
+		{
+			data->exit_error = 1;
+			if (saved_stdin != -1)
+				dup2(saved_stdin, STDIN_FILENO);
+			if (saved_stdout != -1)
+				dup2(saved_stdout, STDOUT_FILENO);
+			if (saved_stdin != -1)
+				close(saved_stdin);
+			if (saved_stdout != -1)
+				close(saved_stdout);
+			return ;
+		}
 		cmd = create_cmd_array(data->tokens);
 		is_builtin = execute_builtin(data, cmd);
 		free_matrix(cmd);
+		if (saved_stdin != -1)
+			dup2(saved_stdin, STDIN_FILENO);
+		if (saved_stdout != -1)
+			dup2(saved_stdout, STDOUT_FILENO);
+		if (saved_stdin != -1)
+			close(saved_stdin);
+		if (saved_stdout != -1)
+			close(saved_stdout);
 		if (is_builtin)
 		{
 			fflush(stdout);
@@ -95,7 +122,7 @@ void	executor(t_data *data)
 		}
 	}
 	create_child_process(data, &ex);
-	close_all_fds(ex.fds, ex.nbr_process -1);
+	close_all_fds(ex.fds, ex.nbr_process - 1);
 	wait_for_children(&ex, data);
 	cleanup_executor(&ex);
 	fflush(stdout);

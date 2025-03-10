@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:29:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:33:56 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:46:06 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,14 @@ void	child_process(t_data *data, int pipe_index)
 			token_ptr = token_ptr->next;
 	}
 	data->exec.tmp = token_ptr;
+	// Set up pipeline redirections first
 	ignore_signals_in_child();
 	setup_redirections(data, pipe_index);
 	close_all_fds(data->exec.fds, data->exec.nbr_process - 1);
+	// Then set up file redirections
+	if (!setup_redirections_for_token(data->exec.tmp))
+		exit(1);
+	// Create and execute command
 	cmd = create_cmd_array(data->exec.tmp);
 	if (data->exec.tmp->type == BUILDIN && execute_builtin(data, cmd))
 	{
@@ -65,20 +70,20 @@ void	child_process(t_data *data, int pipe_index)
 	exit(127);
 }
 
-static int	count_tokens_until_pipe(t_token *tokens)
-{
-	t_token	*tmp;
-	int		count;
+// static int	count_tokens_until_pipe(t_token *tokens)
+// {
+// 	t_token	*tmp;
+// 	int		count;
 
-	count = 0;
-	tmp = tokens;
-	while (tmp && tmp->type != PIPE)
-	{
-		count++;
-		tmp = tmp->next;
-	}
-	return (count);
-}
+// 	count = 0;
+// 	tmp = tokens;
+// 	while (tmp && tmp->type != PIPE)
+// 	{
+// 		count++;
+// 		tmp = tmp->next;
+// 	}
+// 	return (count);
+// }
 
 char	**create_cmd_array(t_token *tokens)
 {
@@ -86,19 +91,42 @@ char	**create_cmd_array(t_token *tokens)
 	char	**cmd;
 	int		count;
 	int		i;
+	int		skip_next;
 
-	count = count_tokens_until_pipe(tokens);
-	cmd = malloc(sizeof(char *) * (count + 1));
-	if (!cmd)
-		handle_erros("Error: malloc failed", 0, NULL);
+	count = 0;
 	i = 0;
+	skip_next = 0;
 	tmp = tokens;
 	while (tmp && tmp->type != PIPE)
 	{
-		cmd[i] = ft_strdup(tmp->value);
-		if (!cmd[i])
-			handle_erros("Error: malloc failed", 0, NULL);
-		i++;
+		if (skip_next)
+			skip_next = 0;
+		else if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
+			|| tmp->type == APPEND || tmp->type == HEREDOC)
+			skip_next = 1;
+		else
+			count++;
+		tmp = tmp->next;
+	}
+	cmd = malloc(sizeof(char *) * (count + 1));
+	if (!cmd)
+		handle_erros("Error: malloc failed", 0, NULL);
+	tmp = tokens;
+	skip_next = 0;
+	while (tmp && tmp->type != PIPE)
+	{
+		if (skip_next)
+			skip_next = 0;
+		else if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
+			|| tmp->type == APPEND || tmp->type == HEREDOC)
+			skip_next = 1;
+		else
+		{
+			cmd[i] = ft_strdup(tmp->value);
+			if (!cmd[i])
+				handle_erros("Error: malloc failed", 0, NULL);
+			i++;
+		}
 		tmp = tmp->next;
 	}
 	cmd[i] = NULL;

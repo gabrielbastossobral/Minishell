@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:50:23 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:59:05 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:28:16 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,25 +73,28 @@ int	handle_heredoc(char *delimiter)
 {
 	int		pipefd[2];
 	char	*line;
+	int 	stdin_copy;
 
-	if (pipe(pipefd) == -1)
+	if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
 		return (0);
 	while (1)
 	{
 		ft_putstr_fd("> ", STDOUT_FILENO);
+		fflush(stdout);
 		line = readline("");
-		if (!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (!line && g_heredoc_status == 0)
 		{
-			free(line);
-			break ;
+			dup2(stdin_copy, STDIN_FILENO);
+			close(stdin_copy);
+			close(pipefd[0]);
+			close(pipefd[1]);
+			setup_signals();
+			return (0);
 		}
-		ft_putstr_fd(line, pipefd[1]);
-		ft_putstr_fd("\n", pipefd[1]);
-		free(line);
+		if (!line || !process_heredoc_line(line, delimiter, pipefd[1]))
+			break ;
 	}
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
+	cleanup_heredoc(pipefd, stdin_copy);
 	return (1);
 }
 
@@ -108,19 +111,24 @@ int	setup_redirections_for_token(t_token *tokens)
 			if (!token->next || (token->next->type != ARG
 					&& token->next->type != ARG_FILE))
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+				ft_putstr_fd("minishell: syntax error near unexpected token\n",
+					STDERR_FILENO);
 				return (0);
 			}
-			if(token->type == REDIR_OUT && !handle_redir_out(token->next->value))
+			if (token->type == REDIR_OUT
+				&& !handle_redir_out(token->next->value))
 				return (0);
-			else if (token->type == REDIR_IN && !handle_redir_in(token->next->value))
-                return (0);
-            else if (token->type == APPEND && !handle_redir_append(token->next->value))
-                return (0);
-            else if (token->type == HEREDOC && !handle_heredoc(token->next->value))
-                return (0);
-        }
-        token = token->next;
-    }
-    return (1);
+			else if (token->type == REDIR_IN
+				&& !handle_redir_in(token->next->value))
+				return (0);
+			else if (token->type == APPEND
+				&& !handle_redir_append(token->next->value))
+				return (0);
+			else if (token->type == HEREDOC
+				&& !handle_heredoc(token->next->value))
+				return (0);
+		}
+		token = token->next;
+	}
+	return (1);
 }
