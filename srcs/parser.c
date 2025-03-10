@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 10:04:45 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:34:25 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,20 @@ void	type_token(t_token **head)
 	{
 		if (!ft_strncmp(token->value, "|", ft_strlen(token->value)))
 			token->type = PIPE;
-		else if (!ft_strncmp(token->value, ">>", ft_strlen(token->value)) || \
-		!ft_strncmp(token->value, "<", ft_strlen(token->value)))
-			token->type = REDIRECT;
-		else if (!ft_strncmp(token->value, "<<", ft_strlen("<<")))
+		else if (!ft_strncmp(token->value, ">>", 2))
+			token->type = APPEND;
+		else if (!ft_strncmp(token->value, ">", 1))
+			token->type = REDIR_OUT;
+		else if (!ft_strncmp(token->value, "<", 1))
+			token->type = REDIR_IN;
+		else if (!ft_strncmp(token->value, "<<", 2))
 			token->type = HEREDOC;
 		else if (is_builtin(token->value))
 			token->type = BUILDIN;
 		else if (!token->prev || token->prev->type == PIPE)
 			token->type = EXECVE;
-		else if (token->prev->type == REDIRECT)
+		else if (token->prev->type == REDIR_OUT || token->prev->type == REDIR_IN
+			|| token->prev->type == APPEND || token->prev->type == HEREDOC)
 			token->type = ARG_FILE;
 		else
 			token->type = ARG;
@@ -119,7 +123,7 @@ int	parser(t_token **head, char *str)
 			insert_token(head, cmd[j]);
 		handle_erros(NULL, 1, cmd);
 	}
-	check_pipe (cmdlist[--i], head);
+	check_pipe(cmdlist[--i], head);
 	handle_erros(NULL, 1, cmdlist);
 	type_token(head);
 	return (0);

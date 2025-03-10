@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_checker.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:17:21 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 10:20:13 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:34:33 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int check_next(t_data *data, t_token *token, int type)
+static int	check_next(t_data *data, t_token *token, int type)
 {
 	if (type == PIPE && token->next && token->next->type == PIPE)
 	{
@@ -21,10 +21,13 @@ static int check_next(t_data *data, t_token *token, int type)
 		data->exit_error = 2;
 		return (2);
 	}
-	else if ((type == REDIRECT && token->next == NULL) || \
-	(type == REDIRECT && (token->next->type == PIPE || \
-	token->next->type == REDIRECT || \
-	token->next->type == HEREDOC)))
+	else if (((type == REDIR_OUT || type == REDIR_IN || type == APPEND
+				|| type == HEREDOC) && token->next == NULL)
+		|| ((type == REDIR_OUT || type == REDIR_IN || type == APPEND
+				|| type == HEREDOC) && (token->next->type == PIPE
+				|| token->next->type == REDIR_OUT
+				|| token->next->type == REDIR_IN || token->next->type == APPEND
+				|| token->next->type == HEREDOC)))
 	{
 		ft_printf("minishell: syntax error near unexpected token %s\n",
 			token->value);
@@ -46,9 +49,10 @@ int	syntax_checker(t_data *data)
 			if (check_next(data, tmp, PIPE))
 				return (2);
 		}
-		else if ((tmp->type == REDIRECT))
+		else if ((tmp->type == REDIR_OUT || tmp->type == REDIR_IN
+				|| tmp->type == APPEND || tmp->type == HEREDOC))
 		{
-			if (check_next(data, tmp, REDIRECT))
+			if (check_next(data, tmp, tmp->type))
 				return (2);
 		}
 		else if (ft_strchr(tmp->value, '\\'))
