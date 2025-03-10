@@ -6,53 +6,53 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:10 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/26 09:55:46 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:03:01 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void detect_quote_type(char *str, t_token *token)
+void	detect_quote_type(char *str, t_token *token)
 {
-    int i;
-    
-    i = 0;
-    token->quote_type = 0;
-    while (str[i] && !token->quote_type)
-    {
-        if (str[i] == '\'' || str[i] == '\"')
-            token->quote_type = str[i];
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	token->quote_type = 0;
+	while (str[i] && !token->quote_type)
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+			token->quote_type = str[i];
+		i++;
+	}
 }
 
-char *remove_quotes(char *str)
+char	*remove_quotes(char *str)
 {
-    int i;
-    int j;
-    char *result;
-    char quote_char;
-    
-    i = 0;
-    j = 0;
-    quote_char = 0;
-    result = malloc(ft_strlen(str) + 1);
-    while (str[i])
-    {
-        if ((str[i] == '\'' || str[i] == '\"') && 
-            (quote_char == 0 || quote_char == str[i]))
-        {
-            if (quote_char == 0)
-                quote_char = str[i];
-            else
-                quote_char = 0;
-            i++;
-        }
-        else
-            result[j++] = str[i++];
-    }
-    result[j] = '\0';
-    return (result);
+	int		i;
+	int		j;
+	char	*result;
+	char	quote_char;
+
+	i = 0;
+	j = 0;
+	quote_char = 0;
+	result = malloc(ft_strlen(str) + 1);
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '\"')
+			&& (quote_char == 0 || quote_char == str[i]))
+		{
+			if (quote_char == 0)
+				quote_char = str[i];
+			else
+				quote_char = 0;
+			i++;
+		}
+		else
+			result[j++] = str[i++];
+	}
+	result[j] = '\0';
+	return (result);
 }
 
 void	check_pipe(char *line, t_token **head)

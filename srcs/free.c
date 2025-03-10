@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 14:08:36 by gabrielsobr       #+#    #+#             */
-/*   Updated: 2025/03/06 19:54:17 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/10 09:48:53 by gabastos          #+#    #+#             */
+/*   Updated: 2025/03/10 09:48:54 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

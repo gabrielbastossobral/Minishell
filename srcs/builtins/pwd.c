@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 21:34:16 by gabrielsobr       #+#    #+#             */
-/*   Updated: 2025/03/06 21:43:30 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/10 09:25:58 by gabastos          #+#    #+#             */
+/*   Updated: 2025/03/10 09:25:59 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 12:10:02 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/10 09:25:02 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void init(t_data *data, char **envp)
+static void	init(t_data *data, char **envp)
 {
 	data->tokens = NULL;
 	data->envp = copy_envp(envp);
 	data->exit_error = 0;
 }
 
-char *get_input()
+char	*get_input()
 {
-	char *line;
+	char	*line;
 
 	rl_on_new_line();
 	line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
@@ -32,13 +32,13 @@ char *get_input()
 	}
 	if (line && *line)
 		add_history(line);
-	return line;
+	return (line);
 }
 
-static void clear_data(t_data *data)
+static void	clear_data(t_data *data)
 {
-	t_token *current;
-	t_token *next;
+	t_token	*current;
+	t_token	*next;
 
 	current = data->tokens;
 	while (current)

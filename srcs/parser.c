@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/25 11:17:35 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:04:45 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	insert_token(t_token **tokens, char *value)
 {
 	t_token	*new;
 	t_token	*last;
-	char 	*cleaned_value;
+	char	*cleaned_value;
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
@@ -60,14 +60,14 @@ int	is_builtin(char *value)
 
 char	**split_line_arg(char *line)
 {
-    char	**split;
-    int		j;
+	char	**split;
+	int		j;
 
-    j = 0;
-    split = ft_calloc(2, sizeof(char *));
-    split_line(line, &split, &j);
-    split[j] = NULL;
-    return (split);
+	j = 0;
+	split = ft_calloc(2, sizeof(char *));
+	split_line(line, &split, &j);
+	split[j] = NULL;
+	return (split);
 }
 
 void	type_token(t_token **head)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 18:49:53 by gabrielsobr       #+#    #+#             */
-/*   Updated: 2025/03/06 19:52:21 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/10 09:25:53 by gabastos          #+#    #+#             */
+/*   Updated: 2025/03/10 09:25:54 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

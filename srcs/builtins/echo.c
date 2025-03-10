@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 20:42:03 by gabrielsobr       #+#    #+#             */
-/*   Updated: 2025/03/06 20:42:47 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/10 09:25:34 by gabastos          #+#    #+#             */
+/*   Updated: 2025/03/10 09:25:36 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

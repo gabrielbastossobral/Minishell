@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/02/24 11:03:25 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:20:47 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char *get_env_value(char *path, char **envp)
+char	*get_env_value(char *path, char **envp)
 {
-	int i;
-	int path_len;
+	int	i;
+	int	path_len;
 
 	if (!path || !envp)
 		return (NULL);
@@ -23,7 +23,8 @@ char *get_env_value(char *path, char **envp)
 	i = -1;
 	while (envp[++i])
 	{
-		if (ft_strncmp(envp[i], path, path_len) == 0 && envp[i][path_len] == '=')
+		if (ft_strncmp(envp[i], path, path_len) == 0
+			&& envp[i][path_len] == '=')
 			return (envp[i] + path_len + 1);
 	}
 	return (NULL);
@@ -63,10 +64,10 @@ int	ft_isspace(char c)
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 
-char **copy_envp(char **envp)
+char	**copy_envp(char **envp)
 {
-	char **new;
-	int i;
+	char	**new;
+	int		i;
 
 	i = 0;
 	while (envp[i])
