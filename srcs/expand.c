@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:46:38 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:48:44 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:57:53 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ char	*expand_var(char *str, char **envp)
 		if (str[i] == '$' && quotes != 2)
 		{
 			var_name = extract_var_name(str, &i);
-			result = append_var_value(result, var_name, envp);
+			if (!*var_name)
+				result = append_char_to_result(result, '$');
+			else
+				result = append_var_value(result, var_name, envp);
 			free(var_name);
 		}
 		else
