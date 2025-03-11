@@ -6,11 +6,34 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 10:20:58 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:00:06 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static char	*insert_space(char *input, int pos)
+{
+	int		len;
+	char	*new;
+	int		i;
+	int		j;
+
+	len = ft_strlen(input);
+	new = ft_calloc(len + 2, sizeof(char));
+	if (!new)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i <= pos)
+		new[j++] = input[i++];
+	new[j++] = ' ';
+	while (i < len)
+		new[j++] = input[i++];
+	new[j] = '\0';
+	free(input);
+	return (new);
+}
 
 static char	*filler(char *input, int pos)
 {
@@ -33,21 +56,22 @@ static char	*filler(char *input, int pos)
 		new[j++] = input[i++];
 	new[j] = '\0';
 	handle_erros(NULL, 0, input);
+	free(input);
 	return (new);
 }
 
 static char	**split_quoted(char *str)
 {
-    char	**result;
-    int		i;
- 
-    result = ft_calloc(2, sizeof(char *));
-    if (!result)
-        return (NULL);    
-    i = 0;
+	char	**result;
+	int		i;
+
+	result = ft_calloc(2, sizeof(char *));
+	if (!result)
+		return (NULL);
+	i = 0;
 	split_line(str, &result, &i);
 	result[i] = NULL;
-    return (result);
+	return (result);
 }
 
 char	**lexer(char *input)
@@ -56,19 +80,29 @@ char	**lexer(char *input)
 	int		quotes;
 	char	*temp;
 	char	**ret;
+	int		prev_quote;
 
 	i = -1;
 	quotes = 0;
 	temp = ft_strdup(input);
 	while (temp && temp[++i])
 	{
-		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<' ) && !quotes)
+		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<') && !quotes)
 		{
 			temp = filler(temp, i);
 			i = i + 2;
 		}
 		else if (temp[i] == '\"' || temp[i] == '\'')
+		{
+			prev_quote = quotes;
 			quotes = check_quotes(temp[i], quotes);
+			if (prev_quote && !quotes && temp[i + 1] && (temp[i + 1] == '|'
+					|| temp[i + 1] == '>' || temp[i + 1] == '<'))
+			{
+				temp = insert_space(temp, i);
+				i++;
+			}
+		}
 	}
 	if (quotes)
 		handle_erros(NULL, 0, temp);

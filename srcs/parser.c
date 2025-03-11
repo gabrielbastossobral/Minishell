@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 10:34:25 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/11 09:45:46 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ void	type_token(t_token **head)
 	{
 		if (!ft_strncmp(token->value, "|", ft_strlen(token->value)))
 			token->type = PIPE;
-		else if (!ft_strncmp(token->value, ">>", 2))
+		else if (!ft_strncmp(token->value, ">>", ft_strlen(token->value)))
 			token->type = APPEND;
-		else if (!ft_strncmp(token->value, ">", 1))
+		else if (!ft_strncmp(token->value, ">", ft_strlen(token->value)))
 			token->type = REDIR_OUT;
-		else if (!ft_strncmp(token->value, "<", 1))
+		else if (!ft_strncmp(token->value, "<", ft_strlen(token->value)))
 			token->type = REDIR_IN;
-		else if (!ft_strncmp(token->value, "<<", 2))
+		else if (!ft_strncmp(token->value, "<<", ft_strlen(token->value)))
 			token->type = HEREDOC;
 		else if (is_builtin(token->value))
 			token->type = BUILDIN;
