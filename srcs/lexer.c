@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 10:00:06 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:06:39 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static char	*filler(char *input, int pos)
 		new[j++] = input[i++];
 	new[j] = '\0';
 	handle_erros(NULL, 0, input);
-	free(input);
 	return (new);
 }
 

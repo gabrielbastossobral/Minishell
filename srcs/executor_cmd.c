@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:29:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 11:09:11 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:59:09 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,19 @@ void	child_process(t_data *data, int pipe_index)
 		if (token_ptr && token_ptr->type == PIPE)
 			token_ptr = token_ptr->next;
 	}
-	data->exec.tmp = token_ptr;
+	//data->exec.tmp = token_ptr;
+	// Set up pipeline redirections first
 	ignore_signals_in_child();
 	setup_redirections(data, pipe_index);
 	close_all_fds(data->exec.fds, data->exec.nbr_process - 1);
+	// Then set up file redirections
 	if (!setup_redirections_for_token(data->exec.tmp))
 		exit(1);
-	cmd = create_cmd_array(data->exec.tmp);
-	if (data->exec.tmp->type == BUILDIN && execute_builtin(data, cmd))
+	// Create and execute command
+	cmd = create_cmd_array(token_ptr);
+	if (!cmd || ! cmd[0])
+		exit(127);
+	if (token_ptr && token_ptr->type == BUILDIN && execute_builtin(data, cmd))
 	{
 		free_matrix(cmd);
 		exit(data->exit_error);
