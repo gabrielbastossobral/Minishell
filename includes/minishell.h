@@ -4,10 +4,10 @@
 # include "readline/readline.h"
 # include "../libs/libft/includes/not_in_standard_includes/ft_printf_bonus.h"
 # include "../libs/libft/includes/not_in_standard_includes/not_in_standard.h"
-# include "../libs/libft/includes/ft_stdlib.h"
-# include "../libs/libft/includes/ft_string_functions.h"
-# include "../libs/libft/includes/ft_ctype.h"
 # include "../libs/libft/includes/not_in_standard_includes/get_next_line.h"
+# include "../libs/libft/includes/ft_string_functions.h"
+# include "../libs/libft/includes/ft_stdlib.h"
+# include "../libs/libft/includes/ft_ctype.h"
 # include <fcntl.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -173,6 +173,8 @@ int		setup_redirections_for_token(t_token *tokens);
 int		prepare_heredoc_pipe(int *pipefd, int *stdin_copy);
 int		process_heredoc_line(char *line, char *delimiter, int pipefd);
 void	cleanup_heredoc(int *pipefd, int stdin_copy);
+int		validate_redirection_token(t_token *token);
+int		process_redirection(t_token *token);
 
 // CD
 void	ft_cd(t_data *ms, char **cmd, char ***envp);

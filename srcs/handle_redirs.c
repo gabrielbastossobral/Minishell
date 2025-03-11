@@ -100,32 +100,17 @@ int	handle_heredoc(char *delimiter)
 
 int	setup_redirections_for_token(t_token *tokens)
 {
-	t_token	*token;
+	t_token *token;
 
 	token = tokens;
 	while (token && token->type != PIPE)
 	{
-		if (token->type == REDIR_OUT || token->type == REDIR_IN
-			|| token->type == APPEND || token->type == HEREDOC)
+		if (token->type == REDIR_OUT || token->type == REDIR_IN ||
+			token->type == APPEND || token->type == HEREDOC)
 		{
-			if (!token->next || (token->next->type != ARG
-					&& token->next->type != ARG_FILE))
-			{
-				ft_putstr_fd("minishell: syntax error near unexpected token\n",
-					STDERR_FILENO);
+			if (!validate_redirection_token(token))
 				return (0);
-			}
-			if (token->type == REDIR_OUT
-				&& !handle_redir_out(token->next->value))
-				return (0);
-			else if (token->type == REDIR_IN
-				&& !handle_redir_in(token->next->value))
-				return (0);
-			else if (token->type == APPEND
-				&& !handle_redir_append(token->next->value))
-				return (0);
-			else if (token->type == HEREDOC
-				&& !handle_heredoc(token->next->value))
+			if (!process_redirection(token))
 				return (0);
 		}
 		token = token->next;
