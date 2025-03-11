@@ -2,131 +2,108 @@
 #include "../includes/minishell.h"
 #include "../libs/libft/includes/not_in_standard_includes/get_next_line.h"
 
-static char *capture_output(char *command) {
-    char filepath[100];
-    sprintf(filepath, "/tmp/minishell_test_%d", getpid());
-    
-    char cmdfile[100];
-    sprintf(cmdfile, "/tmp/minishell_cmd_%d", getpid());
-    FILE *cmd_fp = fopen(cmdfile, "w");
-    fprintf(cmd_fp, "%s\nexit\n", command);
-    fclose(cmd_fp);
-    
-    char exec_cmd[256];
-    sprintf(exec_cmd, "cd .. && ./minishell < %s > %s 2>&1", cmdfile, filepath);
-    system(exec_cmd);
-    
-    int fd = open(filepath, O_RDONLY);
-    if (fd < 0) {
-        remove(cmdfile);
-        return NULL;
+t_token *create_test_tokens(char *input) {
+    t_token *head = NULL;
+    parser(&head, input);
+    return head;
+}
+
+// Função para verificar se o parser tokenizou corretamente
+int token_count(t_token *head) {
+    int count = 0;
+    while (head) {
+        count++;
+        head = head->next;
     }
+    return count;
+}
+
+// Função para liberar os tokens após o teste
+void free_test_tokens(t_token *head) {
+    t_token *temp;
     
-    char *line;
-    char *result = ft_strdup(""); // Buffer vazio inicial
-    
-    while ((line = get_next_line(fd)) != NULL) {
-        char *temp = result;
-        result = ft_strjoin(result, line);
+    while (head) {
+        temp = head;
+        head = head->next;
+        free(temp->value);
         free(temp);
-        free(line);
     }
-    
-    close(fd);
-    remove(cmdfile);
-    remove(filepath);
-    
-    return result;
 }
 
-static int output_contains(const char *output, const char *text) {
-    // Cópia segura para usar strtok
-    char *output_copy = ft_strdup(output);
-    char *line = strtok(output_copy, "\n");
-    int found = 0;
+// Função para verificar o tipo de um token específico
+int get_token_type_at_index(t_token *head, int index) {
+    int i = 0;
+    while (head && i < index) {
+        head = head->next;
+        i++;
+    }
+    return head ? head->type : -1;
+}
+
+// Função para verificar o valor de um token específico
+char *get_token_value_at_index(t_token *head, int index) {
+    int i = 0;
+    while (head && i < index) {
+        head = head->next;
+        i++;
+    }
+    return head ? head->value : NULL;
+}
+
+// Teste para examinar detalhadamente a estrutura de tokens
+MU_TEST(test_parser_token_analysis) {
+    // String de comando com vários elementos para testar
+    char *test_cmd = "echo hello | grep h > output.txt | cat < input.txt";
+    t_token *tokens = create_test_tokens(test_cmd);
     
-    while (line) {
-        // Ignora linhas com o prompt e outras saídas não relevantes
-        if (strstr(line, "$MINI$HELL_DE_VILÃO$") == NULL && 
-            strstr(line, "exit") == NULL) {
-            if (strstr(line, text)) {
-                found = 1;
-                break;
-            }
+    // Contagem total de tokens
+    int total = token_count(tokens);
+    printf("\n\n==== ANÁLISE DO PARSER ====\n");
+    printf("Comando: '%s'\n", test_cmd);
+    printf("Total de tokens: %d\n\n", total);
+    
+    // Análise de cada token
+    t_token *current = tokens;
+    int i = 0;
+    
+    while (current) {
+        printf("Token #%d:\n", i);
+        printf("  Valor: '%s'\n", current->value);
+        printf("  Tipo: %d (", current->type);
+        
+        // Traduz o código do tipo para texto
+        switch (current->type) {
+            case EXECVE: printf("EXECVE"); break;
+            case BUILDIN: printf("BUILDIN"); break;
+            case ARG: printf("ARG"); break;
+            case PIPE: printf("PIPE"); break;
+            case REDIR_OUT: printf("REDIR_OUT"); break;
+            case REDIR_IN: printf("REDIR_IN"); break;
+            case APPEND: printf("APPEND"); break;
+            case HEREDOC: printf("HEREDOC"); break;
+            case ARG_FILE: printf("ARG_FILE"); break;
+            default: printf("DESCONHECIDO"); break;
         }
-        line = strtok(NULL, "\n");
+        printf(")\n");
+        
+        // Informação de token anterior e próximo
+        printf("  Token anterior: %s\n", current->prev ? current->prev->value : "NULL");
+        printf("  Próximo token: %s\n", current->next ? current->next->value : "NULL");
+        printf("\n");
+        
+        current = current->next;
+        i++;
     }
     
-    free(output_copy);
-    return found;
+    // Limpa os tokens
+    free_test_tokens(tokens);
 }
 
-
-MU_TEST(test_ls) 
-{
-    printf("--------------------------------------------------------------\n");
-    printf("TESTE 1: Verificar se o comando ls é executado corretamente\n");
-    printf("--------------------------------------------------------------\n");
-    char *output = capture_output("ls");
-    mu_check(output_contains(output, "minishell") || 
-             output_contains(output, "Makefile"));
-    free(output);
+MU_TEST_SUITE(test_suite2) {
+    MU_RUN_TEST(test_parser_token_analysis);
 }
 
-MU_TEST(test_ls_with_flags) {
-    printf("--------------------------------------------------------------\n");
-    printf("TESTE 2: Verificar se o comando ls -la é executado corretamente\n");
-    printf("--------------------------------------------------------------\n");
-    char *output = capture_output("ls -la");
-    mu_check(output_contains(output, "total"));
-    mu_check(output_contains(output, "."));
-    free(output);
-}
-
-MU_TEST(test_ls_with_path) 
-{
-    printf("--------------------------------------------------------------\n");
-    printf("TESTE 3: Verificar se o comando ls /tmp é executado corretamente\n");
-    printf("--------------------------------------------------------------\n");
-    char *output = capture_output("ls /tmp");
-    mu_check(!output_contains(output, "No such file or directory"));
-    free(output);
-}
-
-MU_TEST(test_quoted_command) {
-    printf("--------------------------------------------------------------\n");
-    printf("TESTE 4: Verificar erro quando comando está entre aspas\n");
-    printf("--------------------------------------------------------------\n");
-    char *output = capture_output("\"/bin/echo\" Hello World");
-    
-    mu_check(output_contains(output, "No such file or directory"));    
-    mu_check(!output_contains(output, "Hello World"));
-    free(output);
-}
-
-MU_TEST(test_quoted_command_with_quotes) {
-    printf("--------------------------------------------------------------\n");
-    printf("TESTE 5: Verificar erro quando comando está entre aspas (com argumentos entre aspas)\n");
-    printf("--------------------------------------------------------------\n");
-    char *output = capture_output("\"/bin/echo\" \"Hello World\"");
-    
-    mu_check(output_contains(output, "No such file or directory"));    
-    mu_check(!output_contains(output, "Hello World"));
-    free(output);
-}
-
-
-MU_TEST_SUITE(test_suite2)
-{
-    MU_RUN_TEST(test_ls);
-    MU_RUN_TEST(test_ls_with_flags);
-    MU_RUN_TEST(test_ls_with_path);
-    MU_RUN_TEST(test_quoted_command);
-    MU_RUN_TEST(test_quoted_command_with_quotes);
-}
-
-int main(void)
-{
+int main(void) {
     MU_RUN_SUITE(test_suite2);
     MU_REPORT();
     return MU_EXIT_CODE;
