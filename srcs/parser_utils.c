@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:10 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 14:05:33 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:04:43 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,13 @@ char	*remove_quotes(char *str)
 	result = malloc(ft_strlen(str) + 1);
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '\"')
-			&& (quote_char == 0 || quote_char == str[i]))
+		if (str[i] == '\\' && (str[i + 1] == '\"' || str[i + 1] == '\''))
+		{
+			i++;
+			result[j++] = str[i++];
+		}
+		else if ((str[i] == '\'' || str[i] == '\"') && (quote_char == 0
+				|| quote_char == str[i]))
 		{
 			if (quote_char == 0)
 				quote_char = str[i];
