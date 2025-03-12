@@ -33,7 +33,7 @@ SRCS = $(SRC_PATH)/utils.c \
 	   $(SRC_PATH)/builtins/unset.c
 
 OBJS = $(SRCS:.c=.o)
-TEST_SRCS = $(TEST_PATH)/execution_tests.c
+TEST_SRCS = $(TEST_PATH)/test_gc.c
 TEST_OBJS = $(TEST_SRCS:.c=.o)
 
 #===============================RULES===========================================#
