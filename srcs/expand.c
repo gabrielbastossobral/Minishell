@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:46:38 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 13:57:53 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:50:38 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,60 @@ char	*expand_var(char *str, char **envp)
 	return (result);
 }
 
+static int	handle_quotes(char c, int *in_sq, int *in_dq)
+{
+	if (c == '\'' && !(*in_dq))
+	{
+		*in_sq = !(*in_sq);
+		return (1);
+	}
+	else if (c == '\"' && !(*in_sq))
+	{
+		*in_dq = !(*in_dq);
+		return (1);
+	}
+	return (0);
+}
+
+static char	*process_expansion(char *result, char *raw, int *i, char **envp)
+{
+	char	*var_name;
+
+	var_name = extract_var_name(raw, i);
+	if (!*var_name)
+		result = append_char_to_result(result, '$');
+	else
+		result = append_var_value(result, var_name, envp);
+	free(var_name);
+	return (result);
+}
+
+static char	*smart_expand(char *raw, char **envp)
+{
+	int		i;
+	int		in_sq;
+	int		in_dq;
+	char	*result;
+
+	i = 0;
+	in_sq = 0;
+	in_dq = 0;
+	result = ft_strdup("");
+	while (raw[i])
+	{
+		if (handle_quotes(raw[i], &in_sq, &in_dq))
+			i++;
+		else if (raw[i] == '$' && !in_sq)
+			result = process_expansion(result, raw, &i, envp);
+		else
+		{
+			result = append_char_to_result(result, raw[i]);
+			i++;
+		}
+	}
+	return (result);
+}
+
 void	expand(t_data *data)
 {
 	t_token	*token;
@@ -48,9 +102,9 @@ void	expand(t_data *data)
 	token = data->tokens;
 	while (token)
 	{
-		if (ft_strchr(token->value, '$') && token->quote_type != '\'')
+		if (ft_strchr(token->raw_value, '$'))
 		{
-			expanded_value = expand_var(token->value, data->envp);
+			expanded_value = smart_expand(token->raw_value, data->envp);
 			free(token->value);
 			token->value = expanded_value;
 		}

@@ -21,6 +21,7 @@
 // STRUCTS
 typedef struct s_token
 {
+	char			*raw_value;
 	char			*value;
 	int				type;
 	char			quote_type;

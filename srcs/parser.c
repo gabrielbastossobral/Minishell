@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 11:44:44 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:34:12 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	insert_token(t_token **tokens, char *value)
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
 		handle_erros("Error: malloc", 0, NULL);
+	new->raw_value = ft_strdup(value);
 	detect_quote_type(value, new);
 	cleaned_value = remove_quotes(value);
 	new->value = cleaned_value;
