@@ -20,7 +20,7 @@ static char	*insert_space(char *input, int pos)
 	int		j;
 
 	len = ft_strlen(input);
-	new = ft_calloc(len + 2, sizeof(char));
+	new = gc_malloc(len + 2);
 	if (!new)
 		return (NULL);
 	i = 0;
@@ -31,7 +31,6 @@ static char	*insert_space(char *input, int pos)
 	while (i < len)
 		new[j++] = input[i++];
 	new[j] = '\0';
-	free(input);
 	return (new);
 }
 
@@ -41,7 +40,9 @@ static char	*filler(char *input, int pos)
 	int		i;
 	int		j;
 
-	new = ft_calloc(ft_strlen(input) + 3, sizeof(char));
+	new = gc_malloc(ft_strlen(input) + 3);
+	if(!new)
+		return (NULL);
 	i = -1;
 	j = -1;
 	while (++j < pos)
@@ -55,7 +56,6 @@ static char	*filler(char *input, int pos)
 	while (input[i])
 		new[j++] = input[i++];
 	new[j] = '\0';
-	handle_erros(NULL, 0, input);
 	return (new);
 }
 
@@ -64,7 +64,7 @@ static char	**split_quoted(char *str)
 	char	**result;
 	int		i;
 
-	result = ft_calloc(2, sizeof(char *));
+	result = gc_malloc(2 * sizeof(char *));
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -84,6 +84,7 @@ char	**lexer(char *input)
 	i = -1;
 	quotes = 0;
 	temp = ft_strdup(input);
+	gc_add(temp);
 	while (temp && temp[++i])
 	{
 		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<') && !quotes)
@@ -104,8 +105,7 @@ char	**lexer(char *input)
 		}
 	}
 	if (quotes)
-		handle_erros(NULL, 0, temp);
+		return (NULL);
 	ret = split_quoted(temp);
-	handle_erros(NULL, 0, temp);
 	return (ret);
 }

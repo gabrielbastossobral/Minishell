@@ -42,15 +42,19 @@ static void	create_pipes(t_exec *ex)
 	pipe_count = ex->nbr_process - 1;
 	if (pipe_count <= 0)
 		return ;
-	ex->fds = malloc(sizeof(int *) * pipe_count);
+	ex->fds = gc_malloc(sizeof(int *) * pipe_count);
 	if (!ex->fds)
-		handle_erros("Error: malloc failed", 0, NULL);
+		return ;
+	gc_add(ex->fds);
 	i = 0;
 	while (i < pipe_count)
 	{
-		ex->fds[i] = malloc(sizeof(int) * 2);
+		ex->fds[i] = gc_malloc(sizeof(int) * 2);
+		if (!ex->fds[i])
+			return ;
+		gc_add(ex->fds[i]);
 		if (!ex->fds[i] || pipe(ex->fds[i]) == -1)
-			handle_erros("Error: pipe failed", 0, NULL);
+			return ;
 		i++;
 	}
 }

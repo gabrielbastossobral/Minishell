@@ -18,9 +18,9 @@ void	insert_token(t_token **tokens, char *value)
 	t_token	*last;
 	char	*cleaned_value;
 
-	new = ft_calloc(1, sizeof(t_token));
+	new = gc_malloc(sizeof(t_token));
 	if (!new)
-		handle_erros("Error: malloc", 0, NULL);
+		return ;
 	new->raw_value = ft_strdup(value);
 	detect_quote_type(value, new);
 	cleaned_value = remove_quotes(value);
@@ -28,6 +28,7 @@ void	insert_token(t_token **tokens, char *value)
 	new->type = 0;
 	new->next = NULL;
 	new->prev = NULL;
+	gc_add(new);
 	if (!*tokens)
 	{
 		*tokens = new;
@@ -65,7 +66,9 @@ char	**split_line_arg(char *line)
 	int		j;
 
 	j = 0;
-	split = ft_calloc(2, sizeof(char *));
+	split = gc_malloc(2 * sizeof(char *));
+	if (!split)
+		return (NULL);
 	split_line(line, &split, &j);
 	split[j] = NULL;
 	return (split);
@@ -116,7 +119,6 @@ int	parser(t_token **head, char *str)
 	if (!cmdlist)
 	{
 		ft_putstr_fd("-minishell: parser: unclosed quotes\n", 2);
-		handle_erros(NULL, 1, cmdlist);
 		return (1);
 	}
 	i = -1;
@@ -126,10 +128,8 @@ int	parser(t_token **head, char *str)
 		cmd = split_line_arg(cmdlist[i]);
 		while (cmd[++j])
 			insert_token(head, cmd[j]);
-		handle_erros(NULL, 1, cmd);
 	}
 	check_pipe(cmdlist[--i], head);
-	handle_erros(NULL, 1, cmdlist);
 	type_token(head);
 	return (0);
 }

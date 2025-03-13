@@ -21,7 +21,16 @@ static void	init(t_data *data, char **envp)
 	data->exit_error = 0;
 }
 
-char	*get_input()
+static void clenup_readline(void)
+{
+	clear_history();
+	rl_clear_history();
+	rl_free_line_state();
+	if (rl_line_buffer)
+		free(rl_line_buffer);
+}
+
+char	*get_input(void)
 {
 	char	*line;
 
@@ -30,14 +39,16 @@ char	*get_input()
 	if (!line)
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		gc_exit();
 		exit(0);
 	}
 	if (line && *line)
 		add_history(line);
+	gc_add(line);
 	return (line);
 }
 
-static void	clear_data(t_data *data)
+/*static void	clear_data(t_data *data)
 {
 	t_token	*current;
 	t_token	*next;
@@ -46,12 +57,12 @@ static void	clear_data(t_data *data)
 	while (current)
 	{
 		next = current->next;
-		free(current->value);
-		free(current);
+		gc_free(current->value);
+		gc_free(current);
 		current = next;
 	}
 	data->tokens = NULL;
-}
+}*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -59,10 +70,13 @@ int	main(int argc, char **argv, char **envp)
 	t_data	data;
 
 	if (argc != 1 || argv[1])
-		handle_erros("Usage: ./minishell", 0, NULL);
+	{
+		ft_putstr_fd("minishell: invalid arguments\n", STDERR_FILENO);
+		return (1);
+	}
 	init(&data, envp);
 	setup_signals();
-	printf("%s%s%s\n", RED, PALHAÇAO, RESET);
+	ft_printf("%s%s%s\n", RED, PALHAÇAO, RESET);
 	while (1)
 	{
 		line = get_input();
@@ -72,8 +86,9 @@ int	main(int argc, char **argv, char **envp)
 			executor(&data);
 			rl_on_new_line();
 		}
-		clear_data(&data);
-		free(line);
+		//clear_data(&data);
 	}
+	clenup_readline();
+	gc_exit();
 	return (0);
 }

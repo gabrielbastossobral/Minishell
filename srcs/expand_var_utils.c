@@ -30,20 +30,20 @@ char	*extract_var_name(char *str, int *i)
 	while (str[*i] && ft_isalnum(str[*i]))
 		(*i)++;
 	var_name = ft_substr(str, start, *i - start);
+	gc_add(var_name);
 	return (var_name);
 }
 
 char	*append_char_to_result(char *result, char c)
 {
 	char	tmp[2];
-	char	*old_result;
+	char	*new_result;
 
 	tmp[0] = c;
 	tmp[1] = '\0';
-	old_result = result;
-	result = ft_strjoin(result, tmp);
-	free(old_result);
-	return (result);
+	new_result = ft_strjoin(result, tmp);
+	gc_add(result);
+	return (new_result);
 }
 
 char	*get_var_value(char *var_name, char **envp)
@@ -68,14 +68,15 @@ char	*get_var_value(char *var_name, char **envp)
 char	*append_var_value(char *result, char *var_name, char **envp)
 {
 	char	*var_value;
-	char	*old_result;
+	char	*new_result;
 
 	var_value = get_var_value(var_name, envp);
 	if (var_value)
 	{
-		old_result = result;
-		result = ft_strjoin(result, var_value);
-		free(old_result);
+		new_result = ft_strjoin(result, var_value);
+		gc_add(result);
 	}
-	return (result);
+	else
+		new_result = result;
+	return (new_result);
 }

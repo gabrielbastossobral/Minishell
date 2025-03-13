@@ -5,6 +5,7 @@
 # include "../libs/libft/includes/not_in_standard_includes/ft_printf_bonus.h"
 # include "../libs/libft/includes/not_in_standard_includes/not_in_standard.h"
 # include "../libs/libft/includes/not_in_standard_includes/get_next_line.h"
+# include "../libs/libft/includes/not_in_standard_includes/ft_gc.h"
 # include "../libs/libft/includes/ft_string_functions.h"
 # include "../libs/libft/includes/ft_stdlib.h"
 # include "../libs/libft/includes/ft_ctype.h"
@@ -21,7 +22,7 @@
 // STRUCTS
 typedef struct s_token
 {
-	char			*raw_value;
+	char 			*raw_value;
 	char			*value;
 	int				type;
 	char			quote_type;
@@ -98,8 +99,8 @@ void	handle_erros(char *msg, int stage, void *ptr);
 
 // UTILS
 int		check_quotes(char c, int quotes);
-void	free_matrix(char **matrix);
-int		ft_isspace(char c);
+//void	free_matrix(char **matrix);
+//int		ft_isspace(char c);
 char 	**copy_envp(char **envp);
 char *get_env_value(char *path, char **envp);
 

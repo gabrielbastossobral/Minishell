@@ -50,25 +50,17 @@ void	child_process(t_data *data, int pipe_index)
 		if (token_ptr && token_ptr->type == PIPE)
 			token_ptr = token_ptr->next;
 	}
-	//data->exec.tmp = token_ptr;
-	// Set up pipeline redirections first
 	ignore_signals_in_child();
 	setup_redirections(data, pipe_index);
 	close_all_fds(data->exec.fds, data->exec.nbr_process - 1);
-	// Then set up file redirections
 	if (!setup_redirections_for_token(data->exec.tmp))
 		exit(1);
-	// Create and execute command
 	cmd = create_cmd_array(token_ptr);
 	if (!cmd || ! cmd[0])
 		exit(127);
 	if (token_ptr && token_ptr->type == BUILDIN && execute_builtin(data, cmd))
-	{
-		free_matrix(cmd);
 		exit(data->exit_error);
-	}
 	execute_external(data, cmd);
-	free_matrix(cmd);
 	exit(127);
 }
 
@@ -110,9 +102,13 @@ char	**create_cmd_array(t_token *tokens)
 			count++;
 		tmp = tmp->next;
 	}
-	cmd = malloc(sizeof(char *) * (count + 1));
+	cmd = gc_malloc(sizeof(char *) * (count + 1));
 	if (!cmd)
-		handle_erros("Error: malloc failed", 0, NULL);
+	{
+        ft_putstr_fd("minishell: erro ao alocar memória para comando\n", 2);
+        return (NULL);
+    }
+	gc_add(cmd);
 	tmp = tokens;
 	skip_next = 0;
 	while (tmp && tmp->type != PIPE)
@@ -126,7 +122,11 @@ char	**create_cmd_array(t_token *tokens)
 		{
 			cmd[i] = ft_strdup(tmp->value);
 			if (!cmd[i])
-				handle_erros("Error: malloc failed", 0, NULL);
+			{
+                ft_putstr_fd("minishell: erro ao duplicar valor\n", 2);
+                return (NULL);
+            }
+			gc_add(cmd[i]);
 			i++;
 		}
 		tmp = tmp->next;

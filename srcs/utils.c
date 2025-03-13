@@ -49,7 +49,7 @@ int	check_quotes(char c, int quotes)
 	return (quotes);
 }
 
-void	free_matrix(char **matrix)
+/*void	free_matrix(char **matrix)
 {
 	int	i;
 
@@ -57,12 +57,12 @@ void	free_matrix(char **matrix)
 	while (matrix[++i])
 		free(matrix[i]);
 	free(matrix);
-}
+}*/
 
-int	ft_isspace(char c)
+/*int	ft_isspace(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
-}
+}*/
 
 char	**copy_envp(char **envp)
 {
@@ -72,15 +72,17 @@ char	**copy_envp(char **envp)
 	i = 0;
 	while (envp[i])
 		i++;
-	new = ft_calloc(i + 1, sizeof(char *));
+	new = gc_malloc((i + 1) * sizeof(char *));
 	if (!new)
 		return (0);
 	i = -1;
 	while (envp[++i])
 	{
 		new[i] = ft_strdup(envp[i]);
+		gc_add(new[i]);
 		if (!new[i])
-			free_matrix(new);
+			return (NULL);
 	}
+	new[i] = NULL;
 	return (new);
 }

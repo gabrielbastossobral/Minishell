@@ -21,6 +21,7 @@ char	*expand_var(char *str, char **envp)
 
 	i = 0;
 	result = ft_strdup("");
+	gc_add(result);
 	quotes = 0;
 	while (str[i])
 	{
@@ -32,7 +33,6 @@ char	*expand_var(char *str, char **envp)
 				result = append_char_to_result(result, '$');
 			else
 				result = append_var_value(result, var_name, envp);
-			free(var_name);
 		}
 		else
 			result = append_char_to_result(result, str[i++]);
@@ -64,7 +64,6 @@ static char	*process_expansion(char *result, char *raw, int *i, char **envp)
 		result = append_char_to_result(result, '$');
 	else
 		result = append_var_value(result, var_name, envp);
-	free(var_name);
 	return (result);
 }
 
@@ -79,6 +78,7 @@ static char	*smart_expand(char *raw, char **envp)
 	in_sq = 0;
 	in_dq = 0;
 	result = ft_strdup("");
+	gc_add(result);
 	while (raw[i])
 	{
 		if (handle_quotes(raw[i], &in_sq, &in_dq))
@@ -105,7 +105,6 @@ void	expand(t_data *data)
 		if (ft_strchr(token->raw_value, '$'))
 		{
 			expanded_value = smart_expand(token->raw_value, data->envp);
-			free(token->value);
 			token->value = expanded_value;
 		}
 		token = token->next;

@@ -36,7 +36,7 @@ char	*remove_quotes(char *str)
 	i = 0;
 	j = 0;
 	quote_char = 0;
-	result = malloc(ft_strlen(str) + 1);
+	result = gc_malloc(ft_strlen(str) + 1);
 	while (str[i])
 	{
 		if (str[i] == '\\' && (str[i + 1] == '\"' || str[i + 1] == '\''))
@@ -68,13 +68,12 @@ void	check_pipe(char *line, t_token **head)
 	if (!ft_strncmp(line, "|", 2))
 	{
 		input = readline("> ");
-		if (input && !input[0])
-		{
-			handle_erros(NULL, 0, input);
+		if (!input)
 			return ;
-		}
+		gc_add(input);
+		if (input && !input[0])
+			return ;
 		parser(head, input);
-		handle_erros(NULL, 0, input);
 	}
 }
 
@@ -83,23 +82,18 @@ void	*ft_realloc(void *ptr, size_t size)
 	void	*new_ptr;
 
 	if (!ptr)
-		return (malloc(size));
-	if (size == 0)
-	{
-		free(ptr);
-		return (NULL);
-	}
-	new_ptr = malloc(size);
+		return (gc_malloc(size));
+	new_ptr = gc_malloc(size);
 	if (!new_ptr)
 		return (NULL);
 	ft_memcpy(new_ptr, ptr, size);
-	free(ptr);
 	return (new_ptr);
 }
 
 static void	add_substring(char ***split, char *line, int len, int *j)
 {
 	(*split)[*j] = ft_substr(line, 0, len);
+	gc_add((*split)[*j]);
 	(*j)++;
 	*split = ft_realloc(*split, (*j + 2) * sizeof(char *));
 }

@@ -17,13 +17,9 @@ int process_heredoc_line(char *line, char *delimiter, int pipefd)
 	if (!line)
 		return (0);
 	if (!(ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0))
-	{
-		free(line);
 		return (0);
-	}
 	ft_putstr_fd(line, pipefd);
 	ft_putstr_fd("\n", pipefd);
-	free(line);
 	return (1);
 }
 

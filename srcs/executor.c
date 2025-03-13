@@ -12,13 +12,13 @@
 
 #include "../includes/minishell.h"
 
-static void	cleanup_executor(t_exec *ex)
+/*static void	cleanup_executor(t_exec *ex)
 {
 	if (ex->pid)
 		free(ex->pid);
 	if (ex->fds)
 		free_pipe_fds(ex->fds, ex->nbr_process - 1);
-}
+}*/
 
 static void	wait_for_children(t_exec *ex, t_data *data)
 {
@@ -42,9 +42,13 @@ static void	create_child_process(t_data *data, t_exec *ex)
 
 	ex->tmp = data->tokens;
 	i = -1;
-	ex->pid = malloc(sizeof(pid_t) * ex->nbr_process);
+	ex->pid = gc_malloc(sizeof(pid_t) * ex->nbr_process);
 	if (!ex->pid)
-		handle_erros("Error: malloc failed", 0, NULL);
+	{
+		ft_putstr_fd("Error: malloc failed\n", 2);
+		return ;
+	}
+	gc_add(ex->pid);
 	while (++i < ex->nbr_process)
 	{
 		ex->pid[i] = fork();
@@ -106,7 +110,6 @@ void	executor(t_data *data)
 		}
 		cmd = create_cmd_array(data->tokens);
 		is_builtin = execute_builtin(data, cmd);
-		free_matrix(cmd);
 		if (saved_stdin != -1)
 			dup2(saved_stdin, STDIN_FILENO);
 		if (saved_stdout != -1)
@@ -124,6 +127,6 @@ void	executor(t_data *data)
 	create_child_process(data, &ex);
 	close_all_fds(ex.fds, ex.nbr_process - 1);
 	wait_for_children(&ex, data);
-	cleanup_executor(&ex);
+	//cleanup_executor(&ex);
 	fflush(stdout);
 }

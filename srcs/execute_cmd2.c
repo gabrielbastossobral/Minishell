@@ -60,17 +60,18 @@ static void	try_env_paths(t_data *data, char **cmd)
 		return ;
 	paths = ft_split(path, ':');
 	if (!paths)
-		handle_erros("Error: malloc failed", 1, NULL);
+		return ;
+	gc_add(paths);
 	i = -1;
 	while (paths[++i])
 	{
+		gc_add(paths[i]);
 		tmp = ft_strjoin(paths[i], "/");
+		gc_add(tmp);
 		full_path = ft_strjoin(tmp, cmd[0]);
-		free(tmp);
+		gc_add(full_path);
 		try_exec_with_path(full_path, cmd, data->envp);
-		free(full_path);
 	}
-	free_matrix(paths);
 }
 
 void	execute_external(t_data *data, char **cmd)

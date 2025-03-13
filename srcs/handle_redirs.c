@@ -82,6 +82,8 @@ int	handle_heredoc(char *delimiter)
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		fflush(stdout);
 		line = readline("");
+		if (line)
+			gc_add(line);
 		if (!line && g_heredoc_status == 0)
 		{
 			dup2(stdin_copy, STDIN_FILENO);
