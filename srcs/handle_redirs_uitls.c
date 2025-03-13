@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-int prepare_heredoc_pipe(int *pipefd, int *stdin_copy)
+int	prepare_heredoc_pipe(int *pipefd, int *stdin_copy)
 {
 	*stdin_copy = dup(STDIN_FILENO);
 	if (pipe(pipefd) == -1)
@@ -12,7 +12,7 @@ int prepare_heredoc_pipe(int *pipefd, int *stdin_copy)
 	return (1);
 }
 
-int process_heredoc_line(char *line, char *delimiter, int pipefd)
+int	process_heredoc_line(char *line, char *delimiter, int pipefd)
 {
 	if (!line)
 		return (0);
@@ -23,7 +23,7 @@ int process_heredoc_line(char *line, char *delimiter, int pipefd)
 	return (1);
 }
 
-void cleanup_heredoc(int *pipefd, int stdin_copy)
+void	cleanup_heredoc(int *pipefd, int stdin_copy)
 {
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
@@ -33,12 +33,13 @@ void cleanup_heredoc(int *pipefd, int stdin_copy)
 	setup_signals();
 }
 
-int validate_redirection_token(t_token *token)
+int	validate_redirection_token(t_token *token)
 {
-	if (!token->next || (token->next->type != ARG \
-		&& token->next->type != ARG_FILE))
+	if (!token->next || (token->next->type != ARG
+			&& token->next->type != ARG_FILE))
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near unexpected token\n",
+			STDERR_FILENO);
 		return (0);
 	}
 	return (1);
@@ -46,13 +47,13 @@ int validate_redirection_token(t_token *token)
 
 int	process_redirection(t_token *token)
 {
-    if (token->type == REDIR_OUT)
-        return (handle_redir_out(token->next->value));
-    else if (token->type == REDIR_IN)
-        return (handle_redir_in(token->next->value));
-    else if (token->type == APPEND)
-        return (handle_redir_append(token->next->value));
-    else if (token->type == HEREDOC)
-        return (handle_heredoc(token->next->value));
-    return (1);
+	if (token->type == REDIR_OUT)
+		return (handle_redir_out(token->next->value));
+	else if (token->type == REDIR_IN)
+		return (handle_redir_in(token->next->value));
+	else if (token->type == APPEND)
+		return (handle_redir_append(token->next->value));
+	else if (token->type == HEREDOC)
+		return (handle_heredoc(token->next->value));
+	return (1);
 }

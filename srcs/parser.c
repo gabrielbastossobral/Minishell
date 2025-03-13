@@ -6,7 +6,7 @@
 /*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/12 12:34:12 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/13 15:41:36 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ int	parser(t_token **head, char *str)
 		while (cmd[++j])
 			insert_token(head, cmd[j]);
 	}
-	check_pipe(cmdlist[--i], head);
+	if (i > 0)
+		check_pipe(cmdlist[--i], head);
 	type_token(head);
 	return (0);
 }

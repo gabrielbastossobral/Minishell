@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 15:43:41 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:43:19 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,14 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = get_input();
-		if (!parser(&data.tokens, line) && !syntax_checker(&data))
+		if (line && *line)
 		{
-			expand(&data);
-			executor(&data);
-			rl_on_new_line();
+			if (!parser(&data.tokens, line) && !syntax_checker(&data))
+			{
+				expand(&data);
+				executor(&data);
+				rl_on_new_line();
+			}
 		}
 		//clear_data(&data);
 	}
