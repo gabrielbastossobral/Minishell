@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:36:31 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 15:45:46 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:00:12 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ void	executor(t_data *data)
 			return ;
 		}
 		cmd = create_cmd_array(data->tokens);
-		is_builtin = execute_builtin(data, cmd);
+		is_builtin = 0;
+		if (cmd && cmd[0])
+			is_builtin = execute_builtin(data, cmd);
 		if (saved_stdin != -1)
 			dup2(saved_stdin, STDIN_FILENO);
 		if (saved_stdout != -1)
