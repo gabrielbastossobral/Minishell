@@ -22,6 +22,7 @@ void	insert_token(t_token **tokens, char *value)
 	if (!new)
 		return ;
 	new->raw_value = ft_strdup(value);
+	gc_add(new->raw_value);
 	detect_quote_type(value, new);
 	cleaned_value = remove_quotes(value);
 	new->value = cleaned_value;

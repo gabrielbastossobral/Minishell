@@ -58,8 +58,11 @@ void	child_process(t_data *data, int pipe_index)
 	cmd = create_cmd_array(token_ptr);
 	if (!cmd || ! cmd[0])
 		exit(127);
-	if (token_ptr && token_ptr->type == BUILDIN && execute_builtin(data, cmd))
-		exit(data->exit_error);
+	if (pipe_index > 0 || data->exec.nbr_process > 1)
+	{
+		if (token_ptr && token_ptr->type == BUILDIN && execute_builtin(data, cmd))
+			exit(data->exit_error);
+	}
 	execute_external(data, cmd);
 	exit(127);
 }

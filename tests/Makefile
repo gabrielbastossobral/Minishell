@@ -2,7 +2,7 @@
 
 NAME = test
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -o0
 LIBFT_FLAGS = -lreadline -L$(LIB_PATH) -lft
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
 

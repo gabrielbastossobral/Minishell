@@ -59,18 +59,18 @@ static char	*filler(char *input, int pos)
 	return (new);
 }
 
-static char	**split_quoted(char *str)
+static char **split_quoted(char *str)
 {
-	char	**result;
-	int		i;
+    char **result;
+    int  i;
 
-	result = gc_malloc(2 * sizeof(char *));
-	if (!result)
-		return (NULL);
-	i = 0;
-	split_line(str, &result, &i);
-	result[i] = NULL;
-	return (result);
+    result = gc_malloc(2 * sizeof(char *));
+    if (!result)
+        return (NULL);
+    i = 0;
+    split_line(str, &result, &i);    
+    result[i] = NULL;
+    return (result);
 }
 
 char	**lexer(char *input)
@@ -105,7 +105,7 @@ char	**lexer(char *input)
 		}
 	}
 	if (quotes)
-		return (NULL);
-	ret = split_quoted(temp);
-	return (ret);
+        return (NULL);    
+    ret = split_quoted(temp);
+    return (ret);
 }

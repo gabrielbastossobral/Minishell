@@ -19,15 +19,7 @@ static void	init(t_data *data, char **envp)
 	data->tokens = NULL;
 	data->envp = copy_envp(envp);
 	data->exit_error = 0;
-}
-
-static void clenup_readline(void)
-{
-	clear_history();
-	rl_clear_history();
-	rl_free_line_state();
-	if (rl_line_buffer)
-		free(rl_line_buffer);
+	data->error = 0;
 }
 
 char	*get_input(void)
@@ -48,7 +40,7 @@ char	*get_input(void)
 	return (line);
 }
 
-/*static void	clear_data(t_data *data)
+static void	clear_data(t_data *data)
 {
 	t_token	*current;
 	t_token	*next;
@@ -62,7 +54,7 @@ char	*get_input(void)
 		current = next;
 	}
 	data->tokens = NULL;
-}*/
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -89,9 +81,8 @@ int	main(int argc, char **argv, char **envp)
 				rl_on_new_line();
 			}
 		}
-		//clear_data(&data);
+		clear_data(&data);
 	}
-	clenup_readline();
 	gc_exit();
 	return (0);
 }
