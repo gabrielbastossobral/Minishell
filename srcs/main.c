@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/13 15:43:19 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/17 10:59:56 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int g_heredoc_status = 1;
+int			g_heredoc_status = 1;
 
 static void	init(t_data *data, char **envp)
 {
@@ -27,7 +27,7 @@ char	*get_input(void)
 	char	*line;
 
 	rl_on_new_line();
-	line = readline(GREEN"☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ "RESET);
+	line = readline(GREEN "☯️💰🤡$MINI$HELL_DE_VILÃO$🤡💰☯️ $ " RESET);
 	if (!line)
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
@@ -56,6 +56,16 @@ static void	clear_data(t_data *data)
 	data->tokens = NULL;
 }
 
+static void	process_command(t_data *data, char *line)
+{
+	if (!parser(&data->tokens, line) && !syntax_checker(data))
+	{
+		expand(data);
+		executor(data);
+		rl_on_new_line();
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -73,14 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		line = get_input();
 		if (line && *line)
-		{
-			if (!parser(&data.tokens, line) && !syntax_checker(&data))
-			{
-				expand(&data);
-				executor(&data);
-				rl_on_new_line();
-			}
-		}
+			process_command(&data, line);
 		clear_data(&data);
 	}
 	gc_exit();
