@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:25:53 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:25:54 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:05:58 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ static void	update_var_array(char *var, int var_pos, char ***envp)
 		*envp = free_mat (*envp);
 		*envp = envp_temp;
 	}
-	else
-	{
-		envp[0][var_pos] = free_ptr (envp[0][var_pos]);
-		envp[0][var_pos] = ft_strdup (var);
-	}
+	// else
+	// {
+	// 	envp[0][var_pos] = free_ptr (envp[0][var_pos]);
+	// 	envp[0][var_pos] = ft_strdup (var);
+	// }
 }
 
 static int	valid_var(char *var)

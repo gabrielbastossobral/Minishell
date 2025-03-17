@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:10 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:46:59 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:00:43 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@ void	detect_quote_type(char *str, t_token *token)
 			token->quote_type = str[i];
 		i++;
 	}
-}
-
-static int	quotes(char c, char *quote_char)
-{
-	if (*quote_char == 0)
-		*quote_char = c;
-	else if (*quote_char == c)
-		*quote_char = 0;
-	return (1);
 }
 
 char	*remove_quotes(char *str)

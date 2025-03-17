@@ -125,6 +125,7 @@ t_token	*create_token(char *value);
 void	add_to_list(t_token **tokens, t_token *new);
 int		check_redirection(t_token *token);
 int		check_command_type(t_token *token);
+int		quotes(char c, char *quote_char);
 
 //SYNTAX CHECKER
 int		syntax_checker(t_data *data);

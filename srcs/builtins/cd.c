@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:25:13 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 09:50:28 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:07:18 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static char	*get_home(char **envp)
 		if (!ft_strncmp(envp[i], "HOME=", 5))
 		{
 			home = ft_strdup(envp[i] + 5);
+			gc_add(home);
 			break ;
 		}
 		i++;
@@ -45,7 +46,7 @@ static int	handle_home_dir(t_data *ms, char ***envp)
 		return (0);
 	}
 	set_dir(ms, home_dir, envp);
-	free(home_dir);
+	//free(home_dir);
 	return (1);
 }
 

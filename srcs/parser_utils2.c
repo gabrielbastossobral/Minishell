@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:16:37 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/03/17 10:29:10 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:00:51 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,13 @@ int	check_command_type(t_token *token)
 		|| token->prev->type == APPEND || token->prev->type == HEREDOC)
 		return (ARG_FILE);
 	return (ARG);
+}
+
+int	quotes(char c, char *quote_char)
+{
+	if (*quote_char == 0)
+		*quote_char = c;
+	else if (*quote_char == c)
+		*quote_char = 0;
+	return (1);
 }
