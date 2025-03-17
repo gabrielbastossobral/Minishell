@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:10 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:07:21 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:46:59 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,13 @@ void	detect_quote_type(char *str, t_token *token)
 	}
 }
 
-static void	process_char(char *str, int *i, char *result, int *j,
-		char *quote_char)
+static int	quotes(char c, char *quote_char)
 {
-	if (str[*i] == '\\' && (str[*i + 1] == '\"' || str[*i + 1] == '\''))
-	{
-		(*i)++;
-		result[(*j)++] = str[(*i)++];
-	}
-	else if ((str[*i] == '\'' || str[*i] == '\"') && (*quote_char == 0
-			|| *quote_char == str[*i]))
-	{
-		if (*quote_char == 0)
-			*quote_char = str[*i];
-		else
-			*quote_char = 0;
-		(*i)++;
-	}
-	else
-		result[(*j)++] = str[(*i)++];
+	if (*quote_char == 0)
+		*quote_char = c;
+	else if (*quote_char == c)
+		*quote_char = 0;
+	return (1);
 }
 
 char	*remove_quotes(char *str)
@@ -58,10 +46,19 @@ char	*remove_quotes(char *str)
 	j = 0;
 	quote_char = 0;
 	result = gc_malloc(ft_strlen(str) + 1);
-	if (!result)
-		return (NULL);
 	while (str[i])
-		process_char(str, &i, result, &j, &quote_char);
+	{
+		if (str[i] == '\\' && (str[i + 1] == '\"' || str[i + 1] == '\''))
+		{
+			i++;
+			result[j++] = str[i++];
+		}
+		else if ((str[i] == '\'' || str[i] == '\"') && (quote_char == 0
+				|| quote_char == str[i]))
+			i += quotes(str[i], &quote_char);
+		else
+			result[j++] = str[i++];
+	}
 	result[j] = '\0';
 	return (result);
 }
