@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:16 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/13 15:41:36 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/17 10:16:18 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,11 @@
 void	insert_token(t_token **tokens, char *value)
 {
 	t_token	*new;
-	t_token	*last;
-	char	*cleaned_value;
 
-	new = gc_malloc(sizeof(t_token));
+	new = create_token(value);
 	if (!new)
 		return ;
-	new->raw_value = ft_strdup(value);
-	gc_add(new->raw_value);
-	detect_quote_type(value, new);
-	cleaned_value = remove_quotes(value);
-	new->value = cleaned_value;
-	new->type = 0;
-	new->next = NULL;
-	new->prev = NULL;
-	gc_add(new);
-	if (!*tokens)
-	{
-		*tokens = new;
-		return ;
-	}
-	last = *tokens;
-	while (last->next)
-		last = last->next;
-	new->prev = last;
-	last->next = new;
+	add_to_list(tokens, new);
 }
 
 int	is_builtin(char *value)
@@ -78,33 +58,21 @@ char	**split_line_arg(char *line)
 void	type_token(t_token **head)
 {
 	t_token	*token;
+	int		type;
 
 	token = *head;
 	while (token)
 	{
 		if (!ft_strncmp(token->value, "|", 1) && ft_strlen(token->value) == 1)
 			token->type = PIPE;
-		else if (!ft_strncmp(token->value, ">>", 2)
-			&& ft_strlen(token->value) == 2)
-			token->type = APPEND;
-		else if (!ft_strncmp(token->value, ">", 1)
-			&& ft_strlen(token->value) == 1)
-			token->type = REDIR_OUT;
-		else if (!ft_strncmp(token->value, "<", 1)
-			&& ft_strlen(token->value) == 1)
-			token->type = REDIR_IN;
-		else if (!ft_strncmp(token->value, "<<", 2)
-			&& ft_strlen(token->value) == 2)
-			token->type = HEREDOC;
-		else if (is_builtin(token->value))
-			token->type = BUILDIN;
-		else if (!token->prev || token->prev->type == PIPE)
-			token->type = EXECVE;
-		else if (token->prev->type == REDIR_OUT || token->prev->type == REDIR_IN
-			|| token->prev->type == APPEND || token->prev->type == HEREDOC)
-			token->type = ARG_FILE;
 		else
-			token->type = ARG;
+		{
+			type = check_redirection(token);
+			if (type)
+				token->type = type;
+			else
+				token->type = check_command_type(token);
+		}
 		token = token->next;
 	}
 }
