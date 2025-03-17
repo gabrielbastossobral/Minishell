@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:28:29 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:36:17 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,30 +73,24 @@ static char	**split_quoted(char *str)
 	return (result);
 }
 
-char	**lexer(char *input)
+static char	*process_input(char *temp, int *quotes)
 {
-	int		i;
-	int		quotes;
-	char	*temp;
-	char	**ret;
-	int		prev_quote;
+	int	i;
+	int	prev_quote;
 
 	i = -1;
-	quotes = 0;
-	temp = ft_strdup(input);
-	gc_add(temp);
 	while (temp && temp[++i])
 	{
-		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<') && !quotes)
+		if ((temp[i] == '|' || temp[i] == '>' || temp[i] == '<') && !(*quotes))
 		{
 			temp = filler(temp, i);
 			i = i + 2;
 		}
 		else if (temp[i] == '\"' || temp[i] == '\'')
 		{
-			prev_quote = quotes;
-			quotes = check_quotes(temp[i], quotes);
-			if (prev_quote && !quotes && temp[i + 1] && (temp[i + 1] == '|'
+			prev_quote = *quotes;
+			*quotes = check_quotes(temp[i], *quotes);
+			if (prev_quote && !(*quotes) && temp[i + 1] && (temp[i + 1] == '|'
 					|| temp[i + 1] == '>' || temp[i + 1] == '<'))
 			{
 				temp = insert_space(temp, i);
@@ -104,6 +98,19 @@ char	**lexer(char *input)
 			}
 		}
 	}
+	return (temp);
+}
+
+char	**lexer(char *input)
+{
+	char	*temp;
+	char	**ret;
+	int		quotes;
+
+	quotes = 0;
+	temp = ft_strdup(input);
+	gc_add(temp);
+	temp = process_input(temp, &quotes);
 	if (quotes)
 		return (NULL);
 	ret = split_quoted(temp);
