@@ -117,7 +117,6 @@ int		parser(t_token **head, char *str);
 //PARSER UTILS
 void	split_line(char *line, char ***split, int *j);
 void	check_pipe(char *line, t_token **head);
-//void	*ft_realloc(void *ptr, size_t size);
 char	*remove_quotes(char *str);
 void 	detect_quote_type(char *str, t_token *token);
 
@@ -179,6 +178,7 @@ int		validate_redirection_token(t_token *token);
 int		process_redirection(t_token *token);
 
 // CD
+void	set_dir(t_data *ms, char *dir, char ***envp);
 void	ft_cd(t_data *ms, char **cmd, char ***envp);
 
 // EXPORT
