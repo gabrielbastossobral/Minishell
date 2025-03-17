@@ -103,6 +103,7 @@ int		check_quotes(char c, int quotes);
 //int		ft_isspace(char c);
 char 	**copy_envp(char **envp);
 char *get_env_value(char *path, char **envp);
+void	safe_close(int fd1, int fd2, int fd3);
 
 // LEXER
 char	**lexer(char *input);

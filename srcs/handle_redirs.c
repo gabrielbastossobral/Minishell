@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:50:23 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 15:28:16 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:20:33 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	handle_heredoc(char *delimiter)
 {
 	int		pipefd[2];
 	char	*line;
-	int 	stdin_copy;
+	int		stdin_copy;
 
 	if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
 		return (0);
@@ -87,9 +87,7 @@ int	handle_heredoc(char *delimiter)
 		if (!line && g_heredoc_status == 0)
 		{
 			dup2(stdin_copy, STDIN_FILENO);
-			close(stdin_copy);
-			close(pipefd[0]);
-			close(pipefd[1]);
+			safe_close(stdin_copy, pipefd[0], pipefd[1]);
 			setup_signals();
 			return (0);
 		}
@@ -102,13 +100,13 @@ int	handle_heredoc(char *delimiter)
 
 int	setup_redirections_for_token(t_token *tokens)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = tokens;
 	while (token && token->type != PIPE)
 	{
-		if (token->type == REDIR_OUT || token->type == REDIR_IN ||
-			token->type == APPEND || token->type == HEREDOC)
+		if (token->type == REDIR_OUT || token->type == REDIR_IN
+			|| token->type == APPEND || token->type == HEREDOC)
 		{
 			if (!validate_redirection_token(token))
 				return (0);

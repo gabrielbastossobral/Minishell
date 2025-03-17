@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:58:01 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:21:40 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,11 @@ char	**copy_envp(char **envp)
 	}
 	new[i] = NULL;
 	return (new);
+}
+
+void	safe_close(int fd1, int fd2, int fd3)
+{
+	close (fd1);
+	close (fd2);
+	close (fd3);
 }
