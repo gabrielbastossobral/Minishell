@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"not_in_standard.h": "c",
-		"minishell.h": "c"
+		"minishell.h": "c",
+		"ft_ctype.h": "c"
 	}
 }
