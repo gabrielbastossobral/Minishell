@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:59:56 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:29:12 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	init(&data, envp);
 	setup_signals();
-	ft_printf("%s%s%s\n", RED, PALHAÇAO, RESET);
 	while (1)
 	{
 		line = get_input();
