@@ -6,7 +6,7 @@
 /*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:27 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 10:20:47 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:58:01 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,6 @@ int	check_quotes(char c, int quotes)
 	}
 	return (quotes);
 }
-
-/*void	free_matrix(char **matrix)
-{
-	int	i;
-
-	i = -1;
-	while (matrix[++i])
-		free(matrix[i]);
-	free(matrix);
-}*/
-
-/*int	ft_isspace(char c)
-{
-	return ((c >= 9 && c <= 13) || c == 32);
-}*/
 
 char	**copy_envp(char **envp)
 {
