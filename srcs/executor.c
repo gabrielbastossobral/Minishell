@@ -3,60 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:36:31 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/15 16:00:12 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/17 10:17:21 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-/*static void	cleanup_executor(t_exec *ex)
-{
-	if (ex->pid)
-		free(ex->pid);
-	if (ex->fds)
-		free_pipe_fds(ex->fds, ex->nbr_process - 1);
-}*/
-
-static void	wait_for_children(t_exec *ex, t_data *data)
-{
-	int	i;
-	int	status;
-
-	i = -1;
-	while (++i < ex->nbr_process)
-	{
-		waitpid(ex->pid[i], &status, 0);
-		if (WIFEXITED(status))
-			data->exit_error = WEXITSTATUS(status);
-	}
-	while (waitpid(-1, NULL, WNOHANG) > 0)
-		;
-}
-
-static void	create_child_process(t_data *data, t_exec *ex)
-{
-	int	i;
-
-	ex->tmp = data->tokens;
-	i = -1;
-	ex->pid = gc_malloc(sizeof(pid_t) * ex->nbr_process);
-	if (!ex->pid)
-	{
-		ft_putstr_fd("Error: malloc failed\n", 2);
-		return ;
-	}
-	gc_add(ex->pid);
-	while (++i < ex->nbr_process)
-	{
-		ex->pid[i] = fork();
-		if (ex->pid[i] == 0)
-			child_process(data, i);
-		advance_to_next_cmd(ex);
-	}
-}
 
 int	execute_builtin(t_data *data, char **cmd)
 {
@@ -79,11 +33,50 @@ int	execute_builtin(t_data *data, char **cmd)
 	return (1);
 }
 
+static void	restore_io(int stdin_fd, int stdout_fd)
+{
+	if (stdin_fd != -1)
+	{
+		dup2(stdin_fd, STDIN_FILENO);
+		close(stdin_fd);
+	}
+	if (stdout_fd != -1)
+	{
+		dup2(stdout_fd, STDOUT_FILENO);
+		close(stdout_fd);
+	}
+}
+
+static int	handle_single_command_redirections(t_data *data, int *stdin_fd,
+		int *stdout_fd)
+{
+	*stdin_fd = dup(STDIN_FILENO);
+	*stdout_fd = dup(STDOUT_FILENO);
+	if (!setup_redirections_for_token(data->tokens))
+	{
+		data->exit_error = 1;
+		restore_io(*stdin_fd, *stdout_fd);
+		return (0);
+	}
+	return (1);
+}
+
+static int	execute_single_command(t_data *data, int stdin_fd, int stdout_fd)
+{
+	char	**cmd;
+	int		is_builtin;
+
+	cmd = create_cmd_array(data->tokens);
+	is_builtin = 0;
+	if (cmd && cmd[0])
+		is_builtin = execute_builtin(data, cmd);
+	restore_io(stdin_fd, stdout_fd);
+	return (is_builtin);
+}
+
 void	executor(t_data *data)
 {
 	t_exec	ex;
-	char	**cmd;
-	int		is_builtin;
 	int		saved_stdin;
 	int		saved_stdout;
 
@@ -93,34 +86,10 @@ void	executor(t_data *data)
 	data->exec = ex;
 	if (ex.nbr_process == 1)
 	{
-		saved_stdin = dup(STDIN_FILENO);
-		saved_stdout = dup(STDOUT_FILENO);
-		if (!setup_redirections_for_token(data->tokens))
-		{
-			data->exit_error = 1;
-			if (saved_stdin != -1)
-				dup2(saved_stdin, STDIN_FILENO);
-			if (saved_stdout != -1)
-				dup2(saved_stdout, STDOUT_FILENO);
-			if (saved_stdin != -1)
-				close(saved_stdin);
-			if (saved_stdout != -1)
-				close(saved_stdout);
+		if (!handle_single_command_redirections(data, &saved_stdin,
+				&saved_stdout))
 			return ;
-		}
-		cmd = create_cmd_array(data->tokens);
-		is_builtin = 0;
-		if (cmd && cmd[0])
-			is_builtin = execute_builtin(data, cmd);
-		if (saved_stdin != -1)
-			dup2(saved_stdin, STDIN_FILENO);
-		if (saved_stdout != -1)
-			dup2(saved_stdout, STDOUT_FILENO);
-		if (saved_stdin != -1)
-			close(saved_stdin);
-		if (saved_stdout != -1)
-			close(saved_stdout);
-		if (is_builtin)
+		if (execute_single_command(data, saved_stdin, saved_stdout))
 		{
 			fflush(stdout);
 			return ;
@@ -129,6 +98,5 @@ void	executor(t_data *data)
 	create_child_process(data, &ex);
 	close_all_fds(ex.fds, ex.nbr_process - 1);
 	wait_for_children(&ex, data);
-	//cleanup_executor(&ex);
 	fflush(stdout);
 }

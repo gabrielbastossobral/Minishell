@@ -135,6 +135,8 @@ char	*get_var_value(char *var_name, char **envp);
 char	*append_var_value(char *result, char *var_name, char **envp);
 
 // EXECUTOR
+void	wait_for_children(t_exec *ex, t_data *data);
+void	create_child_process(t_data *data, t_exec *ex);
 void	executor(t_data *data);
 int 	execute_builtin(t_data *data, char **cmd);
 
