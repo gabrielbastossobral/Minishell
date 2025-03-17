@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:36:31 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/15 16:00:12 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/17 10:12:06 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,5 @@ void	executor(t_data *data)
 	create_child_process(data, &ex);
 	close_all_fds(ex.fds, ex.nbr_process - 1);
 	wait_for_children(&ex, data);
-	//cleanup_executor(&ex);
 	fflush(stdout);
 }

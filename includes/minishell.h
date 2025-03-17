@@ -120,6 +120,12 @@ void	check_pipe(char *line, t_token **head);
 char	*remove_quotes(char *str);
 void 	detect_quote_type(char *str, t_token *token);
 
+//PARSER UTILS2
+t_token	*create_token(char *value);
+void	add_to_list(t_token **tokens, t_token *new);
+int		check_redirection(t_token *token);
+int		check_command_type(t_token *token);
+
 //SYNTAX CHECKER
 int		syntax_checker(t_data *data);
 

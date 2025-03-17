@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:10:10 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/12 12:04:43 by gabrielsobr      ###   ########.fr       */
+/*   Updated: 2025/03/17 10:07:21 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,27 @@ void	detect_quote_type(char *str, t_token *token)
 	}
 }
 
+static void	process_char(char *str, int *i, char *result, int *j,
+		char *quote_char)
+{
+	if (str[*i] == '\\' && (str[*i + 1] == '\"' || str[*i + 1] == '\''))
+	{
+		(*i)++;
+		result[(*j)++] = str[(*i)++];
+	}
+	else if ((str[*i] == '\'' || str[*i] == '\"') && (*quote_char == 0
+			|| *quote_char == str[*i]))
+	{
+		if (*quote_char == 0)
+			*quote_char = str[*i];
+		else
+			*quote_char = 0;
+		(*i)++;
+	}
+	else
+		result[(*j)++] = str[(*i)++];
+}
+
 char	*remove_quotes(char *str)
 {
 	int		i;
@@ -37,25 +58,10 @@ char	*remove_quotes(char *str)
 	j = 0;
 	quote_char = 0;
 	result = gc_malloc(ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
 	while (str[i])
-	{
-		if (str[i] == '\\' && (str[i + 1] == '\"' || str[i + 1] == '\''))
-		{
-			i++;
-			result[j++] = str[i++];
-		}
-		else if ((str[i] == '\'' || str[i] == '\"') && (quote_char == 0
-				|| quote_char == str[i]))
-		{
-			if (quote_char == 0)
-				quote_char = str[i];
-			else
-				quote_char = 0;
-			i++;
-		}
-		else
-			result[j++] = str[i++];
-	}
+		process_char(str, &i, result, &j, &quote_char);
 	result[j] = '\0';
 	return (result);
 }
@@ -77,66 +83,45 @@ void	check_pipe(char *line, t_token **head)
 	}
 }
 
-/*void *ft_realloc(void *ptr, size_t size)
+static void	add_substring(char ***split, char *line, int len, int *j)
 {
-    void *new_ptr;
+	char	**new_split;
+	int		i;
 
-    if (!ptr)
-    {
-        new_ptr = gc_malloc(size);
-        return (new_ptr);
-    }
-    new_ptr = gc_malloc(size);
-    if (!new_ptr)
-        return (NULL);
-    size_t i = 0;
-    while (i < size)
-    {
-        d[i] = s[i];
-        i++;
-    }
-    return (new_ptr);
-}*/
-
-static void add_substring(char ***split, char *line, int len, int *j)
-{
-    char **new_split;
-    int i;
-    
-    (*split)[*j] = ft_substr(line, 0, len);
-    gc_add((*split)[*j]);
-    (*j)++;
-    new_split = gc_malloc((*j + 1) * sizeof(char *));
-    if (!new_split)
-        return;
-    i = -1;
-    while (++i < *j)
-        new_split[i] = (*split)[i];
-    new_split[*j] = NULL;
-    *split = new_split;
+	(*split)[*j] = ft_substr(line, 0, len);
+	gc_add((*split)[*j]);
+	(*j)++;
+	new_split = gc_malloc((*j + 1) * sizeof(char *));
+	if (!new_split)
+		return ;
+	i = -1;
+	while (++i < *j)
+		new_split[i] = (*split)[i];
+	new_split[*j] = NULL;
+	*split = new_split;
 }
 
-void split_line(char *line, char ***split, int *j)
+void	split_line(char *line, char ***split, int *j)
 {
-    int i;
-    int quotes;
+	int	i;
+	int	quotes;
 
-    i = 0;
-    quotes = 0;
-    while (line[i])
-    {
-        if (line[i] == '\"' || line[i] == '\'')
-            quotes = check_quotes(line[i], quotes);
-        if (line[i] == ' ' && !quotes)
-        {
-            if (i > 0)
-                add_substring(split, line, i, j);
-            line += i + 1;
-            i = 0;
-        }
-        else
-            i++;
-    }
-    if (*line)
-        add_substring(split, line, i, j);
+	i = 0;
+	quotes = 0;
+	while (line[i])
+	{
+		if (line[i] == '\"' || line[i] == '\'')
+			quotes = check_quotes(line[i], quotes);
+		if (line[i] == ' ' && !quotes)
+		{
+			if (i > 0)
+				add_substring(split, line, i, j);
+			line += i + 1;
+			i = 0;
+		}
+		else
+			i++;
+	}
+	if (*line)
+		add_substring(split, line, i, j);
 }
