@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:16:40 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 15:22:41 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:29:39 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	setup_signals(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void handle_sigint_heredoc(int sig)
+void	handle_sigint_heredoc(int sig)
 {
 	(void)sig;
 	ft_putstr_fd("\n", STDOUT_FILENO);
@@ -41,7 +41,7 @@ void handle_sigint_heredoc(int sig)
 	g_heredoc_status = 0;
 }
 
-void setup_signals_heredoc(void)
+void	setup_signals_heredoc(void)
 {
 	g_heredoc_status = 1;
 	signal(SIGINT, handle_sigint_heredoc);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:37 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/11 14:06:39 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:28:29 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*filler(char *input, int pos)
 	int		j;
 
 	new = gc_malloc(ft_strlen(input) + 3);
-	if(!new)
+	if (!new)
 		return (NULL);
 	i = -1;
 	j = -1;
@@ -59,18 +59,18 @@ static char	*filler(char *input, int pos)
 	return (new);
 }
 
-static char **split_quoted(char *str)
+static char	**split_quoted(char *str)
 {
-    char **result;
-    int  i;
+	char	**result;
+	int		i;
 
-    result = gc_malloc(2 * sizeof(char *));
-    if (!result)
-        return (NULL);
-    i = 0;
-    split_line(str, &result, &i);    
-    result[i] = NULL;
-    return (result);
+	result = gc_malloc(2 * sizeof(char *));
+	if (!result)
+		return (NULL);
+	i = 0;
+	split_line(str, &result, &i);
+	result[i] = NULL;
+	return (result);
 }
 
 char	**lexer(char *input)
@@ -105,7 +105,7 @@ char	**lexer(char *input)
 		}
 	}
 	if (quotes)
-        return (NULL);    
-    ret = split_quoted(temp);
-    return (ret);
+		return (NULL);
+	ret = split_quoted(temp);
+	return (ret);
 }
