@@ -9,13 +9,24 @@ MAKE_NO_PRINT = $(MAKE) --no-print-directory
 #===============================PATH===========================================#
 
 SRC_PATH = ./srcs
-BUILTIN_PATH = $(SRC_PATH)/builtins
+BUILTINS_DIR = $(SRC_PATH)/builtins
+CHILD_DIR = $(SRC_PATH)/child
+EXECUTOR_DIR = $(SRC_PATH)/executor
+EXPAND_DIR = $(SRC_PATH)/expand
+PARSER_DIR = $(SRC_PATH)/parser
+REDIRECT_DIR = $(SRC_PATH)/redirect
 LIB_PATH = ./libs/libft
 INC_PATH = ./includes
 
 #==============================SOURCES=========================================#
 
-SRCS = $(wildcard $(SRC_PATH)/*.c)
+SRCS =	$(wildcard $(SRC_PATH)/*.c) \
+		$(wildcard $(BUILTINS_DIR)/*.c) \
+		$(wildcard $(CHILD_DIR)/*.c) \
+		$(wildcard $(EXECUTOR_DIR)/*.c) \
+		$(wildcard $(EXPAND_DIR)/*.c) \
+		$(wildcard $(PARSER_DIR)/*.c) \
+		$(wildcard $(REDIRECT_DIR)/*.c)
 BUILTIN_SRCS = $(wildcard $(BUILTIN_PATH)/*.c)
 SRCS += $(BUILTIN_SRCS)
 OBJS = $(SRCS:.c=.o)
@@ -43,7 +54,7 @@ $(NAME): $(OBJS) $(HEADERS)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_FLAGS) -o $(NAME)
 	@echo "$(GREEN)Minishell compiled!$(RESET)"
 
-$(SRC_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS)
+%.o: %.c $(HEADERS)
 	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_PATH)
 
 #===============================CLEANING==========================================#
