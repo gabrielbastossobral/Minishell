@@ -82,6 +82,11 @@ gdb: all
 norm:
 	norminette $(SRC_PATH) $(INC_PATH)
 
+#===============================SET===========================================#
+
+set:
+	@git submodule update --init --recursive
+
 #===============================PHONY==========================================#
 
 .PHONY: all clean fclean re leak gdb norm libft
