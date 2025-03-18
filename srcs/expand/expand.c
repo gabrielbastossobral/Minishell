@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
+/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 09:46:38 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/12 12:50:38 by gabrielsobr      ###   ########.fr       */
+/*   Created: 2025/03/18 09:26:20 by gabastos          #+#    #+#             */
+/*   Updated: 2025/03/18 09:26:22 by gabastos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
