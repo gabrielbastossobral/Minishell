@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:38:41 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 11:38:42 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:48:52 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,8 +194,10 @@ int							handle_heredoc(char *delimiter);
 int							setup_redirections_for_token(t_token *tokens);
 
 // HERE DOC UTILS
-int							check_last_delimiter(char *delimiter, char **last_delimiter, int *already_processed);
-int							handle_heredoc_interrupt(int stdin_copy, int *pipefd);
+int							check_last_delimiter(char *delimiter,
+								char **last_delimiter, int *already_processed);
+int							handle_heredoc_interrupt(int stdin_copy,
+								int *pipefd);
 int							process_heredoc_input(char *delimiter, int *pipefd);
 
 // HANDLE REDIRS UTILS

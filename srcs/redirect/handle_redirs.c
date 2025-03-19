@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:50:23 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 11:20:33 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:47:29 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,26 @@ int	handle_redir_append(char *filename)
 
 int	handle_heredoc(char *delimiter)
 {
-    int			pipefd[2];
-    int			stdin_copy;
-    static char	*last_delimiter;
-    static int	already_processed;
-    int			result;
+	int			pipefd[2];
+	int			stdin_copy;
+	static char	*last_delimiter;
+	static int	already_processed;
+	int			result;
 
-    if (check_last_delimiter(delimiter, &last_delimiter, &already_processed))
-        return (1);
-    if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
-        return (0);
-    result = process_heredoc_input(delimiter, pipefd);
-    if (!result)
-        return (handle_heredoc_interrupt(stdin_copy, pipefd));
-    cleanup_heredoc(pipefd, stdin_copy);
+	if (check_last_delimiter(delimiter, &last_delimiter, &already_processed))
+		return (1);
+	if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
+		return (0);
+	result = process_heredoc_input(delimiter, pipefd);
+	if (!result)
+		return (handle_heredoc_interrupt(stdin_copy, pipefd));
+	cleanup_heredoc(pipefd, stdin_copy);
 	if (last_delimiter)
 		gc_free(last_delimiter);
-    last_delimiter = ft_strdup(delimiter);
+	last_delimiter = ft_strdup(delimiter);
 	gc_add(last_delimiter);
-    already_processed = 1;
-    return (1);
+	already_processed = 1;
+	return (1);
 }
 
 int	setup_redirections_for_token(t_token *tokens)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_redirs_uitls.c                              :+:      :+:    :+:   */
+/*   handle_redirs_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:27:28 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/17 10:27:33 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:49:25 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	process_heredoc_line(char *line, char *delimiter, int pipefd)
 {
 	if (!line)
 		return (0);
-	if (ft_strlen(line) == ft_strlen(delimiter) &&
+	if (ft_strlen(line) == ft_strlen(delimiter) && \
 		ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		return (0);
 	ft_putstr_fd(line, pipefd);
