@@ -71,31 +71,26 @@ int	handle_redir_append(char *filename)
 
 int	handle_heredoc(char *delimiter)
 {
-	int		pipefd[2];
-	char	*line;
-	int		stdin_copy;
+    int			pipefd[2];
+    int			stdin_copy;
+    static char	*last_delimiter;
+    static int	already_processed;
+    int			result;
 
-	if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
-		return (0);
-	while (1)
-	{
-		ft_putstr_fd("> ", STDOUT_FILENO);
-		fflush(stdout);
-		line = readline("");
-		if (line)
-			gc_add(line);
-		if (!line && g_heredoc_status == 0)
-		{
-			dup2(stdin_copy, STDIN_FILENO);
-			safe_close(stdin_copy, pipefd[0], pipefd[1]);
-			setup_signals();
-			return (0);
-		}
-		if (!line || !process_heredoc_line(line, delimiter, pipefd[1]))
-			break ;
-	}
-	cleanup_heredoc(pipefd, stdin_copy);
-	return (1);
+    if (check_last_delimiter(delimiter, &last_delimiter, &already_processed))
+        return (1);
+    if (!prepare_heredoc_pipe(pipefd, &stdin_copy))
+        return (0);
+    result = process_heredoc_input(delimiter, pipefd);
+    if (!result)
+        return (handle_heredoc_interrupt(stdin_copy, pipefd));
+    cleanup_heredoc(pipefd, stdin_copy);
+	if (last_delimiter)
+		gc_free(last_delimiter);
+    last_delimiter = ft_strdup(delimiter);
+	gc_add(last_delimiter);
+    already_processed = 1;
+    return (1);
 }
 
 int	setup_redirections_for_token(t_token *tokens)

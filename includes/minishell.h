@@ -193,6 +193,11 @@ int							handle_redir_append(char *filename);
 int							handle_heredoc(char *delimiter);
 int							setup_redirections_for_token(t_token *tokens);
 
+// HERE DOC UTILS
+int							check_last_delimiter(char *delimiter, char **last_delimiter, int *already_processed);
+int							handle_heredoc_interrupt(int stdin_copy, int *pipefd);
+int							process_heredoc_input(char *delimiter, int *pipefd);
+
 // HANDLE REDIRS UTILS
 int							prepare_heredoc_pipe(int *pipefd, int *stdin_copy);
 int							process_heredoc_line(char *line, char *delimiter,
