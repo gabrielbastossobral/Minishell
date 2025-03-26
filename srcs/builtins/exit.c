@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:25:47 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:25:48 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:09:24 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,29 +41,29 @@ static int	check_for_zeros(char *str)
 
 void	ft_exit(t_data *ms, char **cmd)
 {
+	ft_putstr_fd("exit\n", 2);
 	if (!cmd[1])
 	{
-		ms->error = 0;
-		return ;
+		exit(ms->error);
 	}
 	if (cmd[2])
 	{
-		ms->error = 42;
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		ms->error = 1;
 		return ;
 	}
 	if (is_valid_number(cmd[1]))
 	{
 		if (check_for_zeros(cmd[1]))
-			ms->error = ft_atoi(cmd[1]);
+			exit(ft_atoi(cmd[1]) % 256);
 		else
-			ms->error = 0;
+			exit(0);
 	}
 	else
 	{
-		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(cmd[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		ms->error = -1;
+		exit(2);
 	}
 }

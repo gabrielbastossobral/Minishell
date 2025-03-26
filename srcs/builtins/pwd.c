@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabastos <gabastos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabrielsobral <gabrielsobral@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:25:58 by gabastos          #+#    #+#             */
-/*   Updated: 2025/03/10 09:25:59 by gabastos         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:05:27 by gabrielsobr      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	ft_pwd(t_data *ms, char **cmd, char **envp)
 {
-	size_t	i;
+	char	cwd[4096];
 
+	(void)envp;
 	if (!cmd[1])
 	{
-		i = 0;
-		while (envp && envp[i] && ft_strncmp (envp[i], "PWD=", 4))
-			i++;
-		if (envp && envp[i])
-			ft_printf ("%s\n", envp[i] + 4);
+		if (getcwd(cwd, sizeof(cwd)) != NULL)
+			ft_printf("%s\n", cwd);
+		else
+			perror("pwd");
 	}
 	else
 	{
-		ft_putstr_fd ("-" PROMPT_MSG ": pwd: " INVALID_USAGE "\n", 2);
-		ms -> error = 42;
+		ft_putstr_fd("-" PROMPT_MSG ": pwd: " INVALID_USAGE "\n", 2);
+		ms->error = 42;
 	}
 }
